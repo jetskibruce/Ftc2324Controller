@@ -1,0 +1,19 @@
+
+plugins {
+    id 'java-library'
+}
+repositories {
+    maven { url = 'https://jitpack.io' }
+    maven { url = 'https://maven.brott.dev/' }
+
+}
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+dependencies {
+
+    implementation 'com.acmerobotics.roadrunner:core:0.5.6'
+    implementation 'com.github.NoahBres:MeepMeep:2.0.1'
+}
