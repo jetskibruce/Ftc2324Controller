@@ -21,6 +21,10 @@ public class IntakeTest_1 extends OpMode {
     private DcMotor back_right  = null;
     private CRServo intake_servo = null;
     private Servo intake_tilt_servo = null;
+    private Servo intake_tilt_servo = null;
+    private Servo intake_tilt_servo = null;
+    private Servo intake_tilt_servo = null;
+    private Servo intake_tilt_servo = null;
 
 
     Gamepad currentGamepad1;
