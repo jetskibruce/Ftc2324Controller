@@ -9,6 +9,8 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+@TeleOp(name="DriveTest_2", group="Iterative Opmode")
+
 public class DriveTest_2 extends OpMode {
 
     private DcMotor front_left  = null;
@@ -32,7 +34,7 @@ public class DriveTest_2 extends OpMode {
         back_left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         back_right.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        front_right.setDirection(DcMotor.Direction.REVERSE);
+        // front_right.setDirection(DcMotor.Direction.REVERSE);
         currentGamepad1 = new Gamepad();
         previousGamepad1 = new Gamepad();
 }

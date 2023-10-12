@@ -4,16 +4,13 @@ package org.firstinspires.ftc.teamcode;
 //import com.outoftheboxrobotics.photoncore.PhotonCore;
         import com.qualcomm.robotcore.eventloop.opmode.OpMode;
         import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-        import com.qualcomm.robotcore.exception.RobotCoreException;
         import com.qualcomm.robotcore.hardware.CRServo;
         import com.qualcomm.robotcore.hardware.DcMotor;
         import com.qualcomm.robotcore.hardware.Gamepad;
         import com.qualcomm.robotcore.hardware.Servo;
-        import com.qualcomm.robotcore.util.ElapsedTime;
 
-        import org.firstinspires.ftc.robotcore.internal.camera.delegating.DelegatingCaptureSequence;
-@TeleOp(name="IntakeTest_1")
-public class IntakeTest_1 extends OpMode {
+@TeleOp(name="ClawTest_1")
+public class ClawTest_1 extends OpMode {
 
     private DcMotor front_left  = null;
     private DcMotor front_right = null;
@@ -21,14 +18,35 @@ public class IntakeTest_1 extends OpMode {
     private DcMotor back_right  = null;
     private CRServo intake_servo = null;
     private Servo intake_tilt_servo = null;
-    private Servo intake_tilt_servo = null;
-    private Servo intake_tilt_servo = null;
-    private Servo intake_tilt_servo = null;
-    private Servo intake_tilt_servo = null;
+    private Servo front_claw_servo = null;
+    private Servo back_claw_servo = null;
+    private Servo front_wrist_servo = null;
+    private Servo back_wrist_servo = null;
 
 
     Gamepad currentGamepad1;
     Gamepad previousGamepad1;
+
+
+    static double MIN_SERVO = -1;
+    static double MAX_SERVO = 1;
+
+
+    private void increment_servo(Servo active_servo) {
+        double at = active_servo.getPosition();
+        if (at < MAX_SERVO) {
+            at += 1;
+            active_servo.setPosition(at);
+        }
+    }
+
+    private void decrement_servo(Servo active_servo) {
+        double at = active_servo.getPosition();
+        if (at > MIN_SERVO) {
+            at -= 1;
+            active_servo.setPosition(at);
+        }
+    }
 
     @Override
     public void init() {
@@ -40,6 +58,10 @@ public class IntakeTest_1 extends OpMode {
 
         intake_servo = hardwareMap.get(CRServo.class, "intake_servo");
         intake_tilt_servo = hardwareMap.get(Servo.class, "intake_tilt_servo");
+        front_claw_servo = hardwareMap.get(Servo.class, "front_claw_servo");
+        back_claw_servo = hardwareMap.get(Servo.class, "back_claw_servo");
+        front_wrist_servo = hardwareMap.get(Servo.class, "front_wrist_servo");
+        back_wrist_servo = hardwareMap.get(Servo.class, "back_wrist_servo");
 
         front_left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         front_right.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -55,11 +77,51 @@ public class IntakeTest_1 extends OpMode {
     @Override
     public void loop() {
 
+        telemetry.addData("front_claw_servo:",front_claw_servo.getPosition());
+        telemetry.addData("back_claw_servo:",front_claw_servo.getPosition());
+        telemetry.addData("front_wrist_servo:",front_claw_servo.getPosition());
+        telemetry.addData("back_wrist_servo:",front_claw_servo.getPosition());
+
         double drive = gamepad1.left_stick_y;
         double strafe = -gamepad1.left_stick_x;
         double twist = -gamepad1.right_stick_x;
         boolean intake_out = gamepad1.left_bumper;
         boolean intake_in = gamepad1.right_bumper;
+        boolean right_trigger = gamepad1.right_trigger > .5;
+        boolean left_trigger = gamepad1.left_trigger > .5;
+        Servo test_servo = front_claw_servo;
+
+        double slow_counter = 0;
+
+        slow_counter += 1;
+        if (slow_counter >=  100) {
+            slow_counter = 0;
+
+            if (gamepad1.a) {
+                test_servo = front_claw_servo;
+            }
+
+            if (gamepad1.b) {
+                test_servo = back_claw_servo;
+            }
+
+            if (gamepad1.x) {
+                test_servo = front_wrist_servo;
+            }
+
+            if (gamepad1.y) {
+                test_servo = back_wrist_servo;
+            }
+
+            if (left_trigger) {
+                decrement_servo(test_servo);
+            }
+            else {
+                if (right_trigger) {
+                    increment_servo(test_servo);
+                }
+            }
+        }
 
         double[] speeds = {
                 (drive + strafe + twist),
