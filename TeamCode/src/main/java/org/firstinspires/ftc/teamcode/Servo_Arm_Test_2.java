@@ -7,11 +7,14 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.checkerframework.checker.units.qual.C;
+import org.firstinspires.ftc.teamcode.excutil.EncodedPath;
 import org.firstinspires.ftc.teamcode.excutil.Input;
+import org.firstinspires.ftc.teamcode.excutil.PathManager;
 import org.firstinspires.ftc.teamcode.excutil.coroutines.CoroutineManager;
 import org.firstinspires.ftc.teamcode.excutil.coroutines.CoroutineResult;
 
@@ -41,7 +44,6 @@ public class Servo_Arm_Test_2 extends OpMode {
     private Servo back_claw_servo = null;
     private Servo front_wrist_servo = null;
     private Servo back_wrist_servo = null;
-
 
     Gamepad currentGamepad1;
     Gamepad previousGamepad1;
@@ -94,7 +96,9 @@ public class Servo_Arm_Test_2 extends OpMode {
         back_left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         back_right.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        front_right.setDirection(DcMotor.Direction.REVERSE);
+        back_left.setDirection(DcMotorSimple.Direction.REVERSE);
+        back_right.setDirection(DcMotorSimple.Direction.REVERSE);
+
         currentGamepad1 = new Gamepad();
         previousGamepad1 = new Gamepad();
     }
@@ -113,10 +117,13 @@ public class Servo_Arm_Test_2 extends OpMode {
 
     private boolean clawClosed = false;
 
+    private PathManager pathManager = new PathManager();
+
     @Override
     public void loop() {
 
         coroutines.tick(this);
+        pathManager.tickAll();
 
         input1.pollGamepad(gamepad1);
         input2.pollGamepad(gamepad2);
@@ -129,16 +136,21 @@ public class Servo_Arm_Test_2 extends OpMode {
             2000
             );
             //servoTestMult *= -1f;
+        } else if (input1.a.held()) {
+            intake_servo.setPower(1);
+        } else {
+            intake_servo.setPower(0);
         }
 
         if (input1.b.held()) {
-            tower_motor.setPower(0.08f * (input1.b.numTicksHeld / 110f));
+            tower_motor.setPower(0.08f * (input1.b.numTicksHeld / 90f));
         } else {
             tower_motor.setPower(0f);
         }
 
         if (input1.y.held()) {
-            tower_motor.setPower(-0.08f * (input1.y.numTicksHeld / 110f));
+            //tower_motor.setPower(-0.08f * (input1.y.numTicksHeld / 90f));
+            tower_motor.setPower(-1f);
         } else {
             tower_motor.setPower(0f);
         }
@@ -155,7 +167,17 @@ public class Servo_Arm_Test_2 extends OpMode {
             }
         }
 
+        double y = gamepad1.left_stick_y; // Remember, Y stick is reversed!
+        double x = gamepad1.left_stick_x;
+        double rx = gamepad1.right_stick_x;
 
+        front_left.setPower(y + x + rx);
+        back_left.setPower(y - x + rx);
+        front_right.setPower(y - x - rx);
+        back_right.setPower(y + x - rx);
+
+
+        telemetry.addData("Encoder Ticks Tower:", tower_motor.getCurrentPosition());
         telemetry.addData("Selected Servo", selectedServoIndex);
         telemetry.addData("Selected Position", selectedPosition);
         telemetry.addData("# Coroutines Active", coroutines.numActive());
