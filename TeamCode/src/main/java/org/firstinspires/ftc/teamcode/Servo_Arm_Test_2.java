@@ -117,13 +117,13 @@ public class Servo_Arm_Test_2 extends OpMode {
 
     private boolean clawClosed = false;
 
-    private PathManager pathManager = new PathManager();
+    //private PathManager pathManager = new PathManager();
 
     @Override
     public void loop() {
 
         coroutines.tick(this);
-        pathManager.tickAll();
+        //pathManager.tickAll();
 
         input1.pollGamepad(gamepad1);
         input2.pollGamepad(gamepad2);
