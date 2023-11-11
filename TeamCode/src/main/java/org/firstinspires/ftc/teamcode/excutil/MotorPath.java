@@ -4,7 +4,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 public class MotorPath {
 
-    public static MotorPath runToPosition(DcMotor motor, int goalTicks) {
+    public static MotorPath runToPosition(DcMotor motor, int goalTicks, double power) {
+        motor.setPower(power);
         motor.setTargetPosition(goalTicks);
         motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         return new MotorPath(motor, goalTicks);

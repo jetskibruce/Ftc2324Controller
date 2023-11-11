@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmodes.debug;
+package org.firstinspires.ftc.teamcode.opmodes.teleop.debug;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.excutil.Input;
 import org.firstinspires.ftc.teamcode.excutil.RMath;
+import org.firstinspires.ftc.teamcode.macros.Flag;
 import org.firstinspires.ftc.teamcode.macros.PathStep;
 import org.firstinspires.ftc.teamcode.macros.RobotComponents;
 import org.firstinspires.ftc.teamcode.macros.tuckdown.ArbitraryDelayMacro;
@@ -47,6 +48,8 @@ public class PoseFinder extends OpMode {
     @Override
     public void init() {
         RobotComponents.init(this.hardwareMap);
+
+
     }
 
     boolean inExactPoseMode = false;
@@ -54,12 +57,16 @@ public class PoseFinder extends OpMode {
     int numTicksLeftStickUp = 0, numTicksLeftStickDown = 0;
     int numTicksRightStickUp = 0, numTicksRightStickDown = 0;
 
+    boolean intakeOn = false;
 
     @Override
     public void loop() {
 
+        // update input, and macro/coroutine systems
         RobotComponents.tickSystems(this);
         input.pollGamepad(gamepad1);
+
+        // begin tick trackers for pose modes
 
         if (gamepad1.left_stick_y < -0.6) numTicksLeftStickUp++;
         else numTicksLeftStickUp = 0;
@@ -73,6 +80,9 @@ public class PoseFinder extends OpMode {
         if (gamepad1.right_stick_y > 0.6) numTicksRightStickDown++;
         else numTicksRightStickDown = 0;
 
+        // end pose mode trackers
+
+        // go to separate logic depending on what mode we're on
         switch (currentPoseMode) {
             case POSE_SERVO:
                 handleServoPoseMode();
@@ -110,9 +120,25 @@ public class PoseFinder extends OpMode {
             inExactPoseMode = !inExactPoseMode;
         }
 
+        if (gamepad1.left_stick_x > 0.8) {
+            intakeOn = true;
+        }
+
+        if (gamepad1.right_stick_x > 0.8) {
+            intakeOn = false;
+        }
+
+        boolean intake = intakeOn;
+
+        double backPower = 1;
+        double forePower = 1;
+        RobotComponents.back_intake_servo.setPower(intake ? backPower : 0);
+        RobotComponents.front_intake_servo.setPower(intake ? forePower : 0);
+
 
     }
 
+    // resets speedup variables, used when switching between pose modes so you aren't suprised by old speed
     private void resetPoseSpecificVariables() {
         motorSpeed = 0.7;
         motorPoseTickrateMultiplier = 2;
@@ -126,8 +152,10 @@ public class PoseFinder extends OpMode {
     double currentServoPos = 0;
     double servoSpeedMultiplier = 1;
 
-    private static final double SERVO_SPEED_INCREMENT = 0.05;
-    private static final int SERVO_SPEED_LOOPSPACE = 30;
+    // increment: amount it changes each time
+    // loopspace : number of ticks in position between each increment
+    private static final double SERVO_SPEED_INCREMENT = 0.02;
+    private static final int SERVO_SPEED_LOOPSPACE = 90;
     private void handleServoPoseMode() {
 
         telemetry.addData("Posing servo " + currentServo.name, "(idx " + currentServoIdx + ")");
@@ -136,8 +164,8 @@ public class PoseFinder extends OpMode {
             if (input.x.down()) currentServoPos -= 0.01 * servoSpeedMultiplier;
             if (input.y.down()) currentServoPos += 0.01 * servoSpeedMultiplier;
         } else {
-            currentServoPos += gamepad1.right_trigger * 0.01 * servoSpeedMultiplier;
-            currentServoPos -= gamepad1.left_trigger * 0.01 * servoSpeedMultiplier;
+            currentServoPos += gamepad1.right_trigger * 0.002 * servoSpeedMultiplier;
+            currentServoPos -= gamepad1.left_trigger * 0.002 * servoSpeedMultiplier;
         }
 
         // +1 because 0 % x always == 0
@@ -159,7 +187,7 @@ public class PoseFinder extends OpMode {
         currentServo.servo.setPosition(currentServoPos);
 
         telemetry.addData("Servo target position is ", currentServoPos);
-        telemetry.addData("Speedup factor: ", servoSpeedMultiplier + "x");
+        telemetry.addData("Position increment multiplier: ", servoSpeedMultiplier + "x");
 
         if (input.a.down()) {
             currentServoIdx = (currentServoIdx + 1) % RobotComponents.servos.size();
@@ -167,8 +195,13 @@ public class PoseFinder extends OpMode {
             switchToServoIdx(currentServoIdx);
         }
 
+        for (Integer i : servoIdxToPos.keySet()) {
+            telemetry.addData("servo " + i, servoIdxToPos.get(i));
+        }
+
     }
 
+    // switch all servo variables to new target and potentially load its old position
     private void switchToServoIdx(int newIdx) {
 
         if (currentServoIdx != -1) {
@@ -179,8 +212,10 @@ public class PoseFinder extends OpMode {
 
         currentServo = RobotComponents.servos.get(currentServoIdx);
 
-        Double savedPos = servoIdxToPos.get(currentServoIdx);
-        currentServoPos = (savedPos == null) ? 0 : savedPos;
+        //Double savedPos = servoIdxToPos.get(currentServoIdx);
+        //currentServoPos = (savedPos == null) ? 0 : savedPos;
+
+        currentServoPos = currentServo.servo.getPosition();
     }
 
 
@@ -192,11 +227,13 @@ public class PoseFinder extends OpMode {
     double motorSpeed = 0.7;
     int motorPoseTickrateMultiplier = 2;
 
-    private static final double MOTOR_SPEED_INCREMENT = 0.05;
-    private static final int MOTOR_SPEED_LOOPSPACE = 30;
+    private static final double MOTOR_SPEED_INCREMENT = 0.015;
+    private static final int MOTOR_SPEED_LOOPSPACE = 90;
 
     private static final double MOTOR_TICKRATE_INCREMENT = 1;
-    private static final int MOTOR_TICKRATE_LOOPSPACE = 120;
+    private static final int MOTOR_TICKRATE_LOOPSPACE = 130;
+
+    private static final int IMPRECISE_LOOPSPACE = 10;
 
     private void handleMotorPoseMode() {
         telemetry.addData("Posing motor " + currentMotor.name, "(idx " + currentMotorIdx + ")");
@@ -205,10 +242,10 @@ public class PoseFinder extends OpMode {
             if (input.x.down()) currentMotorTicks -= 1 * motorPoseTickrateMultiplier;
             if (input.y.down()) currentMotorTicks += 1 * motorPoseTickrateMultiplier;
         } else {
-            if (input.right_trigger.held())
+            if (input.right_trigger.held() && (input.right_trigger.numTicksHeld % IMPRECISE_LOOPSPACE == 0))
                 currentMotorTicks += 1 * motorPoseTickrateMultiplier;
 
-            if (input.left_trigger.held())
+            if (input.left_trigger.held() && (input.left_trigger.numTicksHeld % IMPRECISE_LOOPSPACE == 0))
                 currentMotorTicks -= 1 * motorPoseTickrateMultiplier;
         }
 
@@ -247,7 +284,7 @@ public class PoseFinder extends OpMode {
         motorSpeed = RMath.clamp(motorSpeed, 0, 1);
 
         telemetry.addData("Motor target position is ", currentMotorTicks);
-        telemetry.addData("Tickrate speedup factor: ", motorPoseTickrateMultiplier + "x");
+        telemetry.addData("Tickrate increment multiplier: ", motorPoseTickrateMultiplier + "x");
         telemetry.addData("Motor power: ", motorSpeed + "/1");
 
         if (input.a.down()) {
@@ -259,6 +296,7 @@ public class PoseFinder extends OpMode {
         lastTicks = currentMotorTicks;
     }
 
+    // switch to motor at index and load its old position if it has one
     private void switchToMotorIdx(int newIdx) {
         lastTicks = Integer.MIN_VALUE;
 
@@ -272,6 +310,8 @@ public class PoseFinder extends OpMode {
 
         Integer savedTicks = motorIdxToTicks.get(currentMotorIdx);
         currentMotorTicks = (savedTicks == null) ? 0 : savedTicks;
+
+        currentMotor.motor.setPower(motorSpeed);
     }
 
 }

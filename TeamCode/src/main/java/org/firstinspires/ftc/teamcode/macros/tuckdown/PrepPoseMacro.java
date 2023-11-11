@@ -8,25 +8,32 @@ import org.firstinspires.ftc.teamcode.excutil.coroutines.CoroutineResult;
 import org.firstinspires.ftc.teamcode.macros.PathStep;
 import org.firstinspires.ftc.teamcode.macros.RobotComponents;
 
-public class IntakePoseMacro extends PathStep {
+public class PrepPoseMacro extends PathStep {
 
-    private static final double WRIST_GOAL_POS = 0.62;
-    private static final double BUCKET_GOAL_POS = 0.14;
+    private static final double WRIST_GOAL_POS = 0.73;
+    private static final double BUCKET_GOAL_POS = 0.378;
+
+    private MotorPath upPath = null;
 
     @Override
     public void start() {
         super.start();
 
-        MotorPath.runToPosition(RobotComponents.tower_motor, 0, 0.6);
+        upPath = MotorPath.runToPosition(RobotComponents.tower_motor, 480, 0.6);
 
-        RobotComponents.wrist_servo.setPosition(WRIST_GOAL_POS);
-        RobotComponents.bucket_servo.setPosition(BUCKET_GOAL_POS);
+        RobotComponents.coroutines.runLater(() -> {
+            RobotComponents.bucket_servo.setPosition(BUCKET_GOAL_POS);
+        }, 80);
 
+        RobotComponents.coroutines.startRoutineLater((mode, d) -> {
+            RobotComponents.wrist_servo.setPosition(WRIST_GOAL_POS);
+            return CoroutineResult.Stop;
+        }, 120);
 
         RobotComponents.coroutines.startRoutineLater((mode, d) -> {
             finish();
             return CoroutineResult.Stop;
-        }, 400);
+        }, 200);
     }
 
     @Override

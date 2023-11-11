@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmodes.functional;
+package org.firstinspires.ftc.teamcode.opmodes.teleop.functional;
 
 //import com.outoftheboxrobotics.photoncore.PhotonCore;
 

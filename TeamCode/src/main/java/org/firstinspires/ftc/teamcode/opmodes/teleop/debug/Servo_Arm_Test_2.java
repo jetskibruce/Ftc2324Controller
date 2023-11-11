@@ -1,5 +1,5 @@
 
-package org.firstinspires.ftc.teamcode.opmodes.debug;
+package org.firstinspires.ftc.teamcode.opmodes.teleop.debug;
 
 //import com.outoftheboxrobotics.photoncore.PhotonCore;
 
@@ -11,10 +11,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.checkerframework.checker.units.qual.C;
-import org.firstinspires.ftc.teamcode.excutil.EncodedPath;
 import org.firstinspires.ftc.teamcode.excutil.Input;
-import org.firstinspires.ftc.teamcode.excutil.PathManager;
 import org.firstinspires.ftc.teamcode.excutil.coroutines.CoroutineManager;
 import org.firstinspires.ftc.teamcode.excutil.coroutines.CoroutineResult;
 

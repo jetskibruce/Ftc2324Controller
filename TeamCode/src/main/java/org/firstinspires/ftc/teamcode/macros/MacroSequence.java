@@ -6,13 +6,17 @@ public class MacroSequence {
 
     private static PathStep executingMacro = null;
 
+    public static boolean RunningMacro = false;
+
     private static void run(PathStep step) {
         executingMacro = step;
         executingMacro.start();
+        RunningMacro = true;
     }
 
     public static void stopActiveMacro() {
         executingMacro = null;
+        RunningMacro = false;
     }
 
     public static void tick(OpMode opMode) {
@@ -39,6 +43,7 @@ public class MacroSequence {
         stepIndex++;
         if (stepIndex >= steps.length) {
             Finished = true;
+            MacroSequence.stopActiveMacro();
             return;
         }
         steps[stepIndex].setHostPath(this);

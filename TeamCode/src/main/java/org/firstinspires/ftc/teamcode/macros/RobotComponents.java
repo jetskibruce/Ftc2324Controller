@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.excutil.coroutines.CoroutineManager;
+import org.firstinspires.ftc.teamcode.util.Encoder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +48,8 @@ public class RobotComponents {
     public static CRServo back_intake_servo;
     public static CRServo front_intake_servo;
 
+    public static Encoder parallelEncoder, perpendicularEncoder;
+
     public static List<ServoComponent> servos = new ArrayList<>();
     // only positionable (read: encoders attached) motors
     public static List<MotorComponent> motors = new ArrayList<>();
@@ -78,10 +81,11 @@ public class RobotComponents {
         tower_motor = registerEncodedMotor(hardwareMap, "tower_motor", "Tower Motor");
         tower_motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        parallelEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "front_left"));
+        perpendicularEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "back_right"));
+
         wrist_servo = registerServo(hardwareMap, "wrist_servo", "Wrist Servo");
         bucket_servo = registerServo(hardwareMap, "bucket_servo", "Bucket Servo");
-
-
 
         front_intake_servo = hardwareMap.get(CRServo.class, "front_intake_servo");
         back_intake_servo = hardwareMap.get(CRServo.class, "back_intake_servo");

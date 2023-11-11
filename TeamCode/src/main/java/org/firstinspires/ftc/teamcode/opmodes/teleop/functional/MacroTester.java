@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmodes.functional;
+package org.firstinspires.ftc.teamcode.opmodes.teleop.functional;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -11,10 +11,15 @@ import org.firstinspires.ftc.teamcode.macros.Flag;
 import org.firstinspires.ftc.teamcode.macros.MacroSequence;
 import org.firstinspires.ftc.teamcode.macros.RobotComponents;
 import org.firstinspires.ftc.teamcode.macros.tuckdown.ArbitraryDelayMacro;
+import org.firstinspires.ftc.teamcode.macros.tuckdown.ArcUpMacro;
+import org.firstinspires.ftc.teamcode.macros.tuckdown.DumpMacro;
 import org.firstinspires.ftc.teamcode.macros.tuckdown.DumpPoseMacro;
 import org.firstinspires.ftc.teamcode.macros.tuckdown.IntakePoseMacro;
 import org.firstinspires.ftc.teamcode.macros.tuckdown.LowerArmMacro;
+import org.firstinspires.ftc.teamcode.macros.tuckdown.PrepDownMacro;
+import org.firstinspires.ftc.teamcode.macros.tuckdown.PrepPoseMacro;
 import org.firstinspires.ftc.teamcode.macros.tuckdown.RaiseTuckMacro;
+import org.firstinspires.ftc.teamcode.macros.tuckdown.TuckMacro;
 
 import static org.firstinspires.ftc.teamcode.macros.RobotComponents.ServoComponent;
 
@@ -41,6 +46,8 @@ public class MacroTester extends LinearOpMode {
 
     float liftPower = 0;
 
+    boolean isUp = false;
+
     @Override
     public void runOpMode() throws InterruptedException {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
@@ -63,9 +70,30 @@ public class MacroTester extends LinearOpMode {
 
             input.pollGamepad(gamepad1);
 
-            if (input.right_trigger.down()) {
+            if (input.right_trigger.down() && !MacroSequence.RunningMacro) {
 
-                MacroSequence.compose(
+                if (!isUp) {
+
+
+                    MacroSequence.compose(
+                            new IntakePoseMacro(),
+                            new PrepPoseMacro(),
+                            new ArcUpMacro(),
+                            new DumpMacro()
+                    ).start();
+
+                    isUp = true;
+                } else {
+                    MacroSequence.compose(
+                            new PrepDownMacro(),
+                            new TuckMacro(),
+                            new IntakePoseMacro()
+                    ).start();
+
+                    isUp = false;
+                }
+
+                /*MacroSequence.compose(
 
                         new ArbitraryDelayMacro(0),
                         new RaiseTuckMacro(),
@@ -74,7 +102,7 @@ public class MacroTester extends LinearOpMode {
                         new ArbitraryDelayMacro(1200),
                         new LowerArmMacro()
 
-                ).start();
+                ).start();*/
 
                 //RobotComponents.tower_motor.setTargetPosition(2830);
                 //RobotComponents.wrist_servo.setPosition(0.48);
@@ -83,10 +111,12 @@ public class MacroTester extends LinearOpMode {
 
             }
 
-            if (MacroSequence.getExecutingMacro() instanceof RaiseTuckMacro) {
-                MacroSequence.getExecutingMacro().tick(this);
-            } else {
-                telemetry.addData("executing macro", "not raise tuck, " + MacroSequence.getExecutingMacro().getClass().getName());
+            if (MacroSequence.getExecutingMacro() != null) {
+                if (MacroSequence.getExecutingMacro() instanceof RaiseTuckMacro) {
+                    MacroSequence.getExecutingMacro().tick(this);
+                } else {
+                    telemetry.addData("executing macro", "not raise tuck, " + MacroSequence.getExecutingMacro().getClass().getName());
+                }
             }
 
             if (input.a.down() && !backingOutServo) {
@@ -139,24 +169,6 @@ public class MacroTester extends LinearOpMode {
             double forePower = 1;
             RobotComponents.back_intake_servo.setPower(intake ? backPower : 0);
             RobotComponents.front_intake_servo.setPower(intake ? forePower : 0);
-
-
-
-            if (gamepad1.left_trigger > 0.1) {
-                if (gamepad1.left_trigger > 0.6) {
-                    goalTicks -= 15;
-                } else {
-                    //goalTicks -= 15;
-                }
-                if (goalTicks != lastGoalTicks) {
-                    RobotComponents.tower_motor.setTargetPosition(goalTicks);
-                    try {
-                        RobotComponents.tower_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    } catch (Exception e) {
-                        // screw off
-                    }
-                }
-            }
 
             telemetry.addData("Tower Goal Position: ", goalTicks);
 
