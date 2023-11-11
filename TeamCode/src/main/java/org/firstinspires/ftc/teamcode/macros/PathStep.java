@@ -2,13 +2,11 @@ package org.firstinspires.ftc.teamcode.macros;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-import java.nio.file.Path;
-
 public abstract class PathStep {
 
     private PathStep nextStep = null;
     protected boolean running = false;
-    protected MacroPath hostPath = null;
+    protected MacroSequence hostPath = null;
 
     public PathStep() {
         this(null);
@@ -22,7 +20,7 @@ public abstract class PathStep {
         running = true;
     }
 
-    public void setHostPath(MacroPath path) {
+    public void setHostPath(MacroSequence path) {
         hostPath = path;
     }
 

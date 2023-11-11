@@ -8,7 +8,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.excutil.coroutines.CoroutineManager;
-import org.opencv.core.Mat;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +20,16 @@ public class RobotComponents {
 
         public ServoComponent(Servo servo, String name) {
             this.servo = servo;
+            this.name = name;
+        }
+    }
+
+    public static class MotorComponent {
+        public DcMotor motor;
+        public String name;
+
+        public MotorComponent(DcMotor motor, String name) {
+            this.motor = motor;
             this.name = name;
         }
     }
@@ -39,8 +48,26 @@ public class RobotComponents {
     public static CRServo front_intake_servo;
 
     public static List<ServoComponent> servos = new ArrayList<>();
+    // only positionable (read: encoders attached) motors
+    public static List<MotorComponent> motors = new ArrayList<>();
 
     public static CoroutineManager coroutines = new CoroutineManager();
+
+    private static Servo registerServo(HardwareMap hardwareMap, String id, String debugName) {
+        Servo servo = hardwareMap.get(Servo.class, id);
+
+        servos.add(new ServoComponent(servo, debugName));
+
+        return servo;
+    }
+
+    private static DcMotor registerEncodedMotor(HardwareMap hardwareMap, String id, String debugName) {
+        DcMotor motor = hardwareMap.get(DcMotor.class, id);
+
+        motors.add(new MotorComponent(motor, debugName));
+
+        return motor;
+    }
 
     public static void init(HardwareMap hardwareMap) {
         front_left = hardwareMap.get(DcMotorEx.class, "front_left");
@@ -48,13 +75,13 @@ public class RobotComponents {
         back_left = hardwareMap.get(DcMotorEx.class, "back_left");
         back_right = hardwareMap.get(DcMotorEx.class, "back_right");
 
-        tower_motor = hardwareMap.get(DcMotor.class, "tower_motor");
+        tower_motor = registerEncodedMotor(hardwareMap, "tower_motor", "Tower Motor");
+        tower_motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        wrist_servo = hardwareMap.get(Servo.class, "wrist_servo");
-        bucket_servo = hardwareMap.get(Servo.class, "bucket_servo");
+        wrist_servo = registerServo(hardwareMap, "wrist_servo", "Wrist Servo");
+        bucket_servo = registerServo(hardwareMap, "bucket_servo", "Bucket Servo");
 
-        servos.add(new ServoComponent(wrist_servo, "Wrist Servo"));
-        servos.add(new ServoComponent(bucket_servo, "Bucket Servo"));
+
 
         front_intake_servo = hardwareMap.get(CRServo.class, "front_intake_servo");
         back_intake_servo = hardwareMap.get(CRServo.class, "back_intake_servo");
@@ -64,6 +91,6 @@ public class RobotComponents {
 
     public static void tickSystems(OpMode activeMode) {
         coroutines.tick(activeMode);
-        MacroPath.tick(activeMode);
+        MacroSequence.tick(activeMode);
     }
 }

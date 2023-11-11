@@ -1,5 +1,5 @@
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.opmodes.debug;
 
 //import com.outoftheboxrobotics.photoncore.PhotonCore;
 

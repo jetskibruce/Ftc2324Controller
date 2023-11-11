@@ -1,29 +1,22 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.opmodes.functional;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.robot.Robot;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.excutil.Input;
-import org.firstinspires.ftc.teamcode.excutil.coroutines.CoroutineManager;
-import org.firstinspires.ftc.teamcode.excutil.coroutines.CoroutineResult;
 import org.firstinspires.ftc.teamcode.macros.Flag;
-import org.firstinspires.ftc.teamcode.macros.MacroPath;
+import org.firstinspires.ftc.teamcode.macros.MacroSequence;
 import org.firstinspires.ftc.teamcode.macros.RobotComponents;
 import org.firstinspires.ftc.teamcode.macros.tuckdown.ArbitraryDelayMacro;
 import org.firstinspires.ftc.teamcode.macros.tuckdown.DumpPoseMacro;
 import org.firstinspires.ftc.teamcode.macros.tuckdown.IntakePoseMacro;
 import org.firstinspires.ftc.teamcode.macros.tuckdown.LowerArmMacro;
 import org.firstinspires.ftc.teamcode.macros.tuckdown.RaiseTuckMacro;
-import org.firstinspires.ftc.teamcode.macros.tuckdown.WristTuckMacro;
-import static org.firstinspires.ftc.teamcode.macros.RobotComponents.ServoComponent;
-import static org.firstinspires.ftc.teamcode.macros.RobotComponents.back_intake_servo;
 
-import java.util.List;
+import static org.firstinspires.ftc.teamcode.macros.RobotComponents.ServoComponent;
 
 
 @TeleOp(group = "drive")
@@ -59,7 +52,7 @@ public class MacroTester extends LinearOpMode {
         RobotComponents.init(hardwareMap);
         RobotComponents.tower_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        MacroPath.run(new IntakePoseMacro());
+        MacroSequence.compose(new IntakePoseMacro()).start();
 
         waitForStart();
 
@@ -72,7 +65,7 @@ public class MacroTester extends LinearOpMode {
 
             if (input.right_trigger.down()) {
 
-                MacroPath.compose(
+                MacroSequence.compose(
 
                         new ArbitraryDelayMacro(0),
                         new RaiseTuckMacro(),
@@ -90,10 +83,10 @@ public class MacroTester extends LinearOpMode {
 
             }
 
-            if (MacroPath.getExecutingMacro() instanceof RaiseTuckMacro) {
-                MacroPath.getExecutingMacro().tick(this);
+            if (MacroSequence.getExecutingMacro() instanceof RaiseTuckMacro) {
+                MacroSequence.getExecutingMacro().tick(this);
             } else {
-                telemetry.addData("executing macro", "not raise tuck, " + MacroPath.getExecutingMacro().getClass().getName());
+                telemetry.addData("executing macro", "not raise tuck, " + MacroSequence.getExecutingMacro().getClass().getName());
             }
 
             if (input.a.down() && !backingOutServo) {

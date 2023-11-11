@@ -2,11 +2,9 @@ package org.firstinspires.ftc.teamcode.macros.tuckdown;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.excutil.RMath;
 import org.firstinspires.ftc.teamcode.macros.Flag;
-import org.firstinspires.ftc.teamcode.macros.MacroPath;
 import org.firstinspires.ftc.teamcode.macros.PathStep;
 
 public class ArmTuckMacro extends PathStep {

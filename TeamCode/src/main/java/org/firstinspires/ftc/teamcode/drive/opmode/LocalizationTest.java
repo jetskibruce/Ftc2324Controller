@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.teamcode.DriveTest_2;
+import org.firstinspires.ftc.teamcode.opmodes.functional.DriveTest_2;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 /**

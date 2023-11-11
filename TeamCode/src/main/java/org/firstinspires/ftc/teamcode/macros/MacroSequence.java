@@ -2,18 +2,16 @@ package org.firstinspires.ftc.teamcode.macros;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-import java.util.List;
-
-public class MacroPath {
+public class MacroSequence {
 
     private static PathStep executingMacro = null;
 
-    public static void run(PathStep step) {
+    private static void run(PathStep step) {
         executingMacro = step;
         executingMacro.start();
     }
 
-    public static void stop() {
+    public static void stopActiveMacro() {
         executingMacro = null;
     }
 
@@ -21,8 +19,8 @@ public class MacroPath {
         if (executingMacro != null) executingMacro.tick(opMode);
     }
 
-    public static MacroPath compose(PathStep... steps) {
-        return new MacroPath(steps);
+    public static MacroSequence compose(PathStep... steps) {
+        return new MacroSequence(steps);
     }
 
     public static PathStep getExecutingMacro() {
@@ -33,7 +31,7 @@ public class MacroPath {
     private int stepIndex = -1;
     public boolean Finished = false;
 
-    public MacroPath(PathStep[] steps) {
+    public MacroSequence(PathStep[] steps) {
         this.steps = steps;
     }
 
@@ -44,7 +42,7 @@ public class MacroPath {
             return;
         }
         steps[stepIndex].setHostPath(this);
-        MacroPath.run(steps[stepIndex]);
+        MacroSequence.run(steps[stepIndex]);
     }
 
     public void start() {
