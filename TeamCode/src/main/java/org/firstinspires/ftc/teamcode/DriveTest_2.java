@@ -63,8 +63,9 @@ public class DriveTest_2 extends OpMode {
         back_left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         back_right.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        front_left.setDirection(DcMotorSimple.Direction.REVERSE);
         front_right.setDirection(DcMotorSimple.Direction.REVERSE);
-        back_right.setDirection(DcMotorSimple.Direction.REVERSE);
+        //back_right.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // front_right.setDirection(DcMotor.Direction.REVERSE);
         currentGamepad1 = new Gamepad();
@@ -117,6 +118,20 @@ public class DriveTest_2 extends OpMode {
 
     private PathManager pathing;
 
+    private static float deadZoneThreshold = 0.6f;
+
+    float deadZoneImproved(float x) {
+        return (float)(
+                (Math.abs(x) < deadZoneThreshold)
+                        ? Math.pow(-8, -Math.pow(x, 2)) + 1.125
+                        : 0
+        );
+    }
+
+    public static float deadZone(float val) {
+        return (val > -deadZoneThreshold && val < deadZoneThreshold) ? 0 : val;
+    }
+
     @Override
     public void loop() {
 
@@ -126,9 +141,9 @@ public class DriveTest_2 extends OpMode {
 
         input.pollGamepad(gamepad1);
 
-        double drive = -gamepad1.left_stick_x;
-        double strafe = -gamepad1.left_stick_y;
-        double twist = -gamepad1.right_stick_x;
+        double drive = -deadZone(gamepad1.left_stick_x);
+        double strafe = -deadZone(gamepad1.left_stick_y);
+        double twist = -deadZone(gamepad1.right_stick_x);
 
         double[] speeds = {
                 (drive + strafe + twist),
