@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.components.RobotComponents;
 
 public class RaiseTuckMacro extends PathStep {
 
-    private static final int RAISE_GOAL_TICKS = 1000;//900;
+    private static final int RAISE_GOAL_TICKS = -1000;//900;
     private static final double BUCKET_GOAL_POS = 0.11;
 
     public MotorPath raisePath = null;

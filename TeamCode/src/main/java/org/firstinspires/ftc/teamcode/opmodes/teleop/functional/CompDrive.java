@@ -30,6 +30,7 @@ public class CompDrive extends OpMode {
 
     private SampleMecanumDrive drive = null;
 
+    private boolean isArmUp = false;  // Use initializers
     @Override
     public void init() {
 
@@ -46,6 +47,13 @@ public class CompDrive extends OpMode {
         //MacroSequence.compose("Init Intake Macro", new IntakePoseMacro()).start();
 
         intakeOn.toggle();
+
+        isArmUp = false;  // Use initializers
+        // Start in the 0 position
+        RobotComponents.tower_motor.setTargetPosition(0);
+        telemetry.addData("tower pos ", RobotComponents.tower_motor.getCurrentPosition());
+        RobotComponents.tower_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        RobotComponents.tower_motor.setPower(0.3);
     }
 
     
@@ -55,11 +63,11 @@ public class CompDrive extends OpMode {
     public void loop() {
 
         RobotComponents.tickSystems(this);
-
-        RobotComponents.tower_motor.setTargetPosition(80);
-        telemetry.addData("tower pos ", RobotComponents.tower_motor.getCurrentPosition());
-        RobotComponents.tower_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        RobotComponents.tower_motor.setPower(0.3);
+//
+//        RobotComponents.tower_motor.setTargetPosition(-80);
+//        telemetry.addData("tower pos ", RobotComponents.tower_motor.getCurrentPosition());
+//        RobotComponents.tower_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        RobotComponents.tower_motor.setPower(0.3);
 
         input.pollGamepad(gamepad1);
 
@@ -73,7 +81,6 @@ public class CompDrive extends OpMode {
 
     }
 
-    private boolean isArmUp;
 
     public void pollTowerInputs() {
         if (input.right_trigger.down() && !MacroSequence.isRunning()) {

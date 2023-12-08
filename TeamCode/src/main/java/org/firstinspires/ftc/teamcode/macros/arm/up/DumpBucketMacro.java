@@ -19,7 +19,7 @@ public class DumpBucketMacro extends PathStep {
 
 
 
-        upPath = MotorPath.runToPosition(RobotComponents.tower_motor, 980, 0.45);
+        upPath = MotorPath.runToPosition(RobotComponents.tower_motor, -980, 0.6);
 
 
     }

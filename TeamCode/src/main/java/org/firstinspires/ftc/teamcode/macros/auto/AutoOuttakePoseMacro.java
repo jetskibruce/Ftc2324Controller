@@ -18,7 +18,7 @@ public class AutoOuttakePoseMacro extends PathStep {
     public void onStart(){
         ;
 
-        upPath = MotorPath.runToPosition(RobotComponents.tower_motor, 240, 0.7);
+        upPath = MotorPath.runToPosition(RobotComponents.tower_motor, -240, 0.7);
 
 
     }

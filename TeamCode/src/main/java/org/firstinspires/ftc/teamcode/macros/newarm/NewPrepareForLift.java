@@ -16,7 +16,7 @@ public class NewPrepareForLift extends PathStep {
 
     @Override
     public void onStart() {
-        upPath = MotorPath.runToPosition(RobotComponents.tower_motor, 400, 0.5);
+        upPath = MotorPath.runToPosition(RobotComponents.tower_motor, -400, 0.5);
 
 
         RobotComponents.coroutines.runLater(() -> {

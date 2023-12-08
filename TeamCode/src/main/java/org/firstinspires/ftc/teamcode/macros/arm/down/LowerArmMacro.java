@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.components.RobotComponents;
 
 public class LowerArmMacro extends PathStep {
 
-    private static final double WRIST_GOAL_POS = 0.85;
+    private static final double WRIST_GOAL_POS = 0.60;
     private static final double BUCKET_GOAL_POS = 0.38;
 
     MotorPath downPath;
@@ -18,7 +18,7 @@ public class LowerArmMacro extends PathStep {
     public void onStart() {
         ;
 
-        downPath = MotorPath.runToPosition(RobotComponents.tower_motor, 400, 0.5);
+        downPath = MotorPath.runToPosition(RobotComponents.tower_motor, -120, 0.6);
 
         RobotComponents.coroutines.runLater(() -> {
             RobotComponents.wrist_servo.setPosition(0.52);

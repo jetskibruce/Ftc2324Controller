@@ -20,7 +20,7 @@ public class ArmToDumpPointMacro extends PathStep {
 
         RobotComponents.bucket_servo.setPosition(BUCKET_GOAL_POS);
 
-        upPath = MotorPath.runToPosition(RobotComponents.tower_motor, 980, 0.5);
+        upPath = MotorPath.runToPosition(RobotComponents.tower_motor, -980, 0.6);
 
 
     }
