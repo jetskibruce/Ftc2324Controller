@@ -83,9 +83,9 @@ public class CompDrive extends OpMode {
 
 
     public void pollTowerInputs() {
-        if (input.right_trigger.down() && !MacroSequence.isRunning()) {
+        if ((input.right_trigger.down() || input.left_trigger.down())&& !MacroSequence.isRunning()) {
 
-            if (isArmUp) {
+            if (input.right_trigger.down()) {
                 MacroSequence.begin(
                         "Lower and Tuck Sequence",
                         new LowerArmMacro(),
@@ -95,20 +95,21 @@ public class CompDrive extends OpMode {
                 );
 
             } else {
-                MacroSequence.begin(
-                        "Lift And Dump Sequence",
-                        new IntakePoseMacro(),
-                        new TuckWristForRiseMacro(),
-                        new ArmToDumpPointMacro(),
-                        new DumpBucketMacro(),
-                        new RunActionMacro((o) -> {
-                            telemetry.speak("get dunked on");
-                            isArmUp = true;
-                            return false;
-                        })
-                );
+                if (input.left_trigger.down()) {
+                    MacroSequence.begin(
+                            "Lift And Dump Sequence",
+                            new IntakePoseMacro(),
+                            new TuckWristForRiseMacro(),
+                            new ArmToDumpPointMacro(),
+                            new DumpBucketMacro(),
+                            new RunActionMacro((o) -> {
+                                telemetry.speak("get dunked on");
+                                isArmUp = true;
+                                return false;
+                            })
+                    );
+                }
             }
-
         }
     }
 

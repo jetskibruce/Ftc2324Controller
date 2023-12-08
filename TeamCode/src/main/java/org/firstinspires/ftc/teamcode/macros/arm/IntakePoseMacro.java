@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.components.RobotComponents;
 
 public class IntakePoseMacro extends PathStep {
 
-    private static final double WRIST_GOAL_POS = 0.62;
+    private static final double WRIST_GOAL_POS = 0.57;
     private static final double BUCKET_GOAL_POS = 0.14;
 
     @Override

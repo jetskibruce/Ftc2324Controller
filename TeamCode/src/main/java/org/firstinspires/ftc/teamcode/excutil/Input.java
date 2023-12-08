@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 
 public class Input {
 
+
     public class ButtonState {
         public int numTicksReleased = -1;
         public int numTicksHeld = -1;
