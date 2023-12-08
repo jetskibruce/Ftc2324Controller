@@ -30,10 +30,20 @@ public class Input {
         }
     }
 
+    public class TriggerState extends ButtonState {
+
+    }
+
     public ButtonState a = new ButtonState();
     public ButtonState b = new ButtonState();
     public ButtonState x = new ButtonState();
     public ButtonState y = new ButtonState();
+
+    public ButtonState left_trigger = new ButtonState();
+    public ButtonState right_trigger = new ButtonState();
+
+    public ButtonState left_bumper = new ButtonState();
+    public ButtonState right_bumper = new ButtonState();
 
 
     public void pollGamepad(Gamepad gamepad) {
@@ -42,6 +52,11 @@ public class Input {
         updateState(x, gamepad.x);
         updateState(y, gamepad.y);
 
+        updateState(left_trigger, gamepad.left_trigger > 0.3);
+        updateState(right_trigger, gamepad.right_trigger > 0.3);
+
+        updateState(left_bumper, gamepad.left_bumper);
+        updateState(right_bumper, gamepad.right_bumper);
     }
 
     public void updateState(ButtonState state, boolean heldNow) {

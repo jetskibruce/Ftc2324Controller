@@ -1,11 +1,19 @@
 package org.firstinspires.ftc.teamcode.excutil;
 
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+
 import org.checkerframework.checker.units.qual.A;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class PathManager {
+
+    private OpMode owner;
+
+    public PathManager(OpMode owner) {
+        this.owner = owner;
+    }
 
     private List<EncodedPath> paths = new ArrayList<>();
 
@@ -18,7 +26,11 @@ public class PathManager {
     public void tickAll() {
         for (EncodedPath p : paths) {
             p.tick();
+            owner.telemetry.addData("started", p.isStarted());
+            owner.telemetry.addData("step index", p.getStepIndex());
+            owner.telemetry.addData("step ticks running", p.numExecutionTicks);
         }
+
     }
 
 }

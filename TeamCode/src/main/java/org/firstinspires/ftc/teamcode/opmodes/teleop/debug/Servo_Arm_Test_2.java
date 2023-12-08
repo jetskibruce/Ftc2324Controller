@@ -1,8 +1,9 @@
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.opmodes.teleop.debug;
 
 //import com.outoftheboxrobotics.photoncore.PhotonCore;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -11,13 +12,11 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.checkerframework.checker.units.qual.C;
-import org.firstinspires.ftc.teamcode.excutil.EncodedPath;
 import org.firstinspires.ftc.teamcode.excutil.Input;
-import org.firstinspires.ftc.teamcode.excutil.PathManager;
 import org.firstinspires.ftc.teamcode.excutil.coroutines.CoroutineManager;
 import org.firstinspires.ftc.teamcode.excutil.coroutines.CoroutineResult;
 
+@Disabled
 @TeleOp(name="Servo_Arm_Test_2")
 public class Servo_Arm_Test_2 extends OpMode {
 
@@ -117,13 +116,13 @@ public class Servo_Arm_Test_2 extends OpMode {
 
     private boolean clawClosed = false;
 
-    private PathManager pathManager = new PathManager();
+    //private PathManager pathManager = new PathManager();
 
     @Override
     public void loop() {
 
         coroutines.tick(this);
-        pathManager.tickAll();
+        //pathManager.tickAll();
 
         input1.pollGamepad(gamepad1);
         input2.pollGamepad(gamepad2);

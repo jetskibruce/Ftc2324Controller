@@ -7,12 +7,22 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
+import java.util.concurrent.Phaser;
 
 public class CoroutineManager {
 
     private ElapsedTime timer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
     private int idCounter = Integer.MIN_VALUE;
     private Map<Integer, Coroutine> storedRoutines = new HashMap<>();
+
+    private Map<Integer, Coroutine> routineQueue = new HashMap<>();
+
+    public int runLater(SimpleAction action, double delay) {
+        return startRoutineLater((mode, d) -> {
+            action.tick();
+            return CoroutineResult.Stop;
+        }, delay);
+    }
 
     public int startRoutine(CoroutineAction action)
     {
@@ -35,7 +45,8 @@ public class CoroutineManager {
     }
 
     private int addCoroutine(Coroutine coroutine) {
-        storedRoutines.put(idCounter, coroutine);
+        // avoids concurrent modification
+        routineQueue.put(idCounter, coroutine);
         return idCounter;
     }
 
@@ -48,6 +59,13 @@ public class CoroutineManager {
 
     public void tick(OpMode opMode)
     {
+        // avoids concurrent modification
+        for (Integer id : routineQueue.keySet()) {
+            storedRoutines.put(id, routineQueue.get(id));
+        }
+
+        routineQueue.clear();
+
         if (storedRoutines.size() == 0) return;
 
         double time = timer.time();
