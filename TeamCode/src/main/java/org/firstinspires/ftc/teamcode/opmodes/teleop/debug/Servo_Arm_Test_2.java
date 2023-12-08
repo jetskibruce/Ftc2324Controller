@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.opmodes.teleop.debug;
 
 //import com.outoftheboxrobotics.photoncore.PhotonCore;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -15,6 +16,7 @@ import org.firstinspires.ftc.teamcode.excutil.Input;
 import org.firstinspires.ftc.teamcode.excutil.coroutines.CoroutineManager;
 import org.firstinspires.ftc.teamcode.excutil.coroutines.CoroutineResult;
 
+@Disabled
 @TeleOp(name="Servo_Arm_Test_2")
 public class Servo_Arm_Test_2 extends OpMode {
 

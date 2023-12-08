@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.teamcode.excutil.MotorPath;
 import org.firstinspires.ftc.teamcode.excutil.coroutines.CoroutineResult;
 import org.firstinspires.ftc.teamcode.macros.PathStep;
-import org.firstinspires.ftc.teamcode.macros.RobotComponents;
+import org.firstinspires.ftc.teamcode.components.RobotComponents;
 
 public class AutoOuttakePoseMacro extends PathStep {
 
@@ -15,10 +15,10 @@ public class AutoOuttakePoseMacro extends PathStep {
     MotorPath upPath = null;
 
     @Override
-    public void start() {
-        super.start();
+    public void onStart(){
+        ;
 
-        upPath = MotorPath.runToPosition(RobotComponents.tower_motor, 190, 0.7);
+        upPath = MotorPath.runToPosition(RobotComponents.tower_motor, 240, 0.7);
 
 
     }
@@ -26,7 +26,7 @@ public class AutoOuttakePoseMacro extends PathStep {
     boolean startOnce = true;
 
     @Override
-    public void tick(OpMode opMode) {
+    public void onTick(OpMode opMode) {
         if (startOnce && upPath.isComplete(8)) {
             startOnce = false;
 

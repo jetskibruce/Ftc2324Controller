@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.opmodes.teleop.functional;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
@@ -9,23 +10,35 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.excutil.Input;
 import org.firstinspires.ftc.teamcode.macros.Flag;
 import org.firstinspires.ftc.teamcode.macros.MacroSequence;
-import org.firstinspires.ftc.teamcode.macros.RobotComponents;
-import org.firstinspires.ftc.teamcode.macros.tuckdown.ArbitraryDelayMacro;
-import org.firstinspires.ftc.teamcode.macros.tuckdown.ArcUpMacro;
-import org.firstinspires.ftc.teamcode.macros.tuckdown.DumpMacro;
-import org.firstinspires.ftc.teamcode.macros.tuckdown.DumpPoseMacro;
-import org.firstinspires.ftc.teamcode.macros.tuckdown.IntakePoseMacro;
-import org.firstinspires.ftc.teamcode.macros.tuckdown.LowerArmMacro;
-import org.firstinspires.ftc.teamcode.macros.tuckdown.PrepDownMacro;
-import org.firstinspires.ftc.teamcode.macros.tuckdown.PrepPoseMacro;
+import org.firstinspires.ftc.teamcode.components.RobotComponents;
+import org.firstinspires.ftc.teamcode.macros.PathStep;
+import org.firstinspires.ftc.teamcode.macros.arm.up.ArmToDumpPointMacro;
+import org.firstinspires.ftc.teamcode.macros.arm.up.DumpBucketMacro;
+import org.firstinspires.ftc.teamcode.macros.arm.IntakePoseMacro;
+import org.firstinspires.ftc.teamcode.macros.arm.down.LowerArmMacro;
+import org.firstinspires.ftc.teamcode.macros.arm.up.TuckWristForRiseMacro;
+import org.firstinspires.ftc.teamcode.macros.generic.RunActionMacro;
 import org.firstinspires.ftc.teamcode.macros.tuckdown.RaiseTuckMacro;
-import org.firstinspires.ftc.teamcode.macros.tuckdown.TuckMacro;
+import org.firstinspires.ftc.teamcode.macros.arm.down.TuckWristDownMacro;
 
-import static org.firstinspires.ftc.teamcode.macros.RobotComponents.ServoComponent;
+import static org.firstinspires.ftc.teamcode.components.RobotComponents.ServoComponent;
 
 
-@TeleOp(group = "drive")
+@TeleOp(group = "Older Drive")
 public class MacroTester extends LinearOpMode {
+
+    class ServoIntakeMacro extends PathStep {
+
+        @Override
+        public void onStart() {
+
+        }
+
+        @Override
+        public void onTick(OpMode opMode) {
+
+        }
+    }
 
     Flag debugOn = new Flag();
 
@@ -59,7 +72,7 @@ public class MacroTester extends LinearOpMode {
         RobotComponents.init(hardwareMap);
         RobotComponents.tower_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        MacroSequence.compose(new IntakePoseMacro()).start();
+        MacroSequence.compose("Init Intake Macro", new IntakePoseMacro()).start();
 
         waitForStart();
 
@@ -70,25 +83,31 @@ public class MacroTester extends LinearOpMode {
 
             input.pollGamepad(gamepad1);
 
-            if (input.right_trigger.down() && !MacroSequence.RunningMacro) {
+            if (input.right_trigger.down() && !MacroSequence.isRunning()) {
 
                 if (!isUp) {
 
 
-                    MacroSequence.compose(
+                    MacroSequence.begin(
+                            "Lift And Dump Sequence",
                             new IntakePoseMacro(),
-                            new PrepPoseMacro(),
-                            new ArcUpMacro(),
-                            new DumpMacro()
-                    ).start();
+                            new TuckWristForRiseMacro(),
+                            new ArmToDumpPointMacro(),
+                            new DumpBucketMacro(),
+                            new RunActionMacro((o) -> {
+                               telemetry.speak("get dunked on");
+                               return false;
+                            })
+                    );
 
                     isUp = true;
                 } else {
-                    MacroSequence.compose(
-                            new PrepDownMacro(),
-                            new TuckMacro(),
+                    MacroSequence.begin(
+                            "Lower and Tuck Sequence",
+                            new LowerArmMacro(),
+                            new TuckWristDownMacro(),
                             new IntakePoseMacro()
-                    ).start();
+                    );
 
                     isUp = false;
                 }
@@ -111,11 +130,11 @@ public class MacroTester extends LinearOpMode {
 
             }
 
-            if (MacroSequence.getExecutingMacro() != null) {
-                if (MacroSequence.getExecutingMacro() instanceof RaiseTuckMacro) {
-                    MacroSequence.getExecutingMacro().tick(this);
+            if (MacroSequence.getActiveMacro() != null) {
+                if (MacroSequence.getActiveMacro() instanceof RaiseTuckMacro) {
+                    MacroSequence.getActiveMacro().onTick(this);
                 } else {
-                    telemetry.addData("executing macro", "not raise tuck, " + MacroSequence.getExecutingMacro().getClass().getName());
+                    telemetry.addData("executing macro", "not raise tuck, " + MacroSequence.getActiveMacro().getClass().getName());
                 }
             }
 
@@ -149,9 +168,7 @@ public class MacroTester extends LinearOpMode {
                 telemetry.addData("Targeted Servo Name: ", targetedServo.name);
             }
 
-            if (input.left_bumper.down()) {
-                intakeOn.toggle();
-            }
+
 
             if (input.right_bumper.down()) {
                 liftPower += 0.1f;

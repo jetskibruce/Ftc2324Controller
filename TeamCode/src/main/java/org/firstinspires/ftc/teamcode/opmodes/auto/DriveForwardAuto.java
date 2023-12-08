@@ -1,20 +1,15 @@
 package org.firstinspires.ftc.teamcode.opmodes.auto;
 
-import com.acmerobotics.roadrunner.drive.Drive;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.robot.Robot;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.excutil.RMath;
 import org.firstinspires.ftc.teamcode.macros.MacroSequence;
-import org.firstinspires.ftc.teamcode.macros.RobotComponents;
+import org.firstinspires.ftc.teamcode.components.RobotComponents;
 import org.firstinspires.ftc.teamcode.macros.auto.AutoOuttakePoseMacro;
 import org.firstinspires.ftc.teamcode.macros.tuckdown.ArbitraryDelayMacro;
-import org.firstinspires.ftc.teamcode.macros.tuckdown.DriveBackMacro;
-import org.firstinspires.ftc.teamcode.macros.tuckdown.DumpPoseMacro;
-import org.firstinspires.ftc.teamcode.macros.tuckdown.IntakePoseMacro;
+import org.firstinspires.ftc.teamcode.macros.arm.IntakePoseMacro;
 
 @Autonomous(name="Drive Forward", group="Robot")
 public class DriveForwardAuto extends OpMode {
@@ -38,7 +33,7 @@ public class DriveForwardAuto extends OpMode {
         mBR = RobotComponents.back_right;
     }
 
-    static final double DISTANCE_IN = 32;
+    static final double DISTANCE_IN = 36;
     static final double GOAL_TICKS = DISTANCE_IN * COUNTS_PER_INCH;
 
     static DcMotor mFL, mFR, mBL, mBR;
@@ -52,21 +47,24 @@ public class DriveForwardAuto extends OpMode {
 
     ElapsedTime runtime = new ElapsedTime();
 
-    boolean debug = true;
+    boolean debug = false;
 
     @Override
     public void start() {
 
-        //equalPowers(-DRIVE_SPEED);
+        //
         runtime.reset();
 
         if (debug) {
-            MacroSequence.compose(
+            MacroSequence.compose("Lift Arm Sequence",
                     new AutoOuttakePoseMacro(),
                     //new DriveBackMacro(1000),
+                    new ArbitraryDelayMacro(1000),
                     new IntakePoseMacro()
 
             ).start();
+        } else {
+            equalPowers(-DRIVE_SPEED);
         }
 
     }
@@ -75,9 +73,9 @@ public class DriveForwardAuto extends OpMode {
 
     @Override
     public void loop() {
-        if (true) return;
-        RobotComponents.tickSystems(this);
-        if (runtime.seconds() > 7 || Math.abs(RobotComponents.parallelEncoder.getCurrentPosition()) >= Math.abs(GOAL_TICKS)) {
+        //if (true) return;
+        //RobotComponents.tickSystems(this);
+        if (runtime.seconds() > 6 || Math.abs(RobotComponents.parallelEncoder.getCurrentPosition()) >= Math.abs(GOAL_TICKS)) {
             equalPowers(0);
             dumponce = false;
 

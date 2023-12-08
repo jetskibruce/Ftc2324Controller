@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.opmodes.teleop.functional;
 
 //import com.outoftheboxrobotics.photoncore.PhotonCore;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -17,8 +18,8 @@ import org.firstinspires.ftc.teamcode.excutil.RMath;
 import org.firstinspires.ftc.teamcode.excutil.coroutines.CoroutineManager;
 import org.firstinspires.ftc.teamcode.excutil.coroutines.CoroutineResult;
 
-@TeleOp(name = "DriveTest_2", group = "Iterative Opmode")
-
+@Disabled
+@TeleOp(name = "DriveTest_2", group = "debug")
 public class DriveTest_2 extends OpMode {
 
     private DcMotor front_left = null;

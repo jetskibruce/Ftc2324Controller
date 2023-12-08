@@ -20,13 +20,13 @@ public class ArmTuckMacro extends PathStep {
 
 
     @Override
-    public void start() {
-        super.start();
+    public void onStart(){
+        ;
         TOWER_MOTOR.setTargetPosition(TUCK_MOTOR_TICKS);
     }
 
     @Override
-    public void tick(OpMode opMode) {
+    public void onTick(OpMode opMode) {
         if (RMath.approx(TOWER_MOTOR.getCurrentPosition(), TUCK_MOTOR_TICKS, 30)) {
             finish();
         }

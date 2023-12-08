@@ -1,21 +1,21 @@
-package org.firstinspires.ftc.teamcode.macros.tuckdown;
+package org.firstinspires.ftc.teamcode.macros.arm.up;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.excutil.MotorPath;
 import org.firstinspires.ftc.teamcode.excutil.coroutines.CoroutineResult;
 import org.firstinspires.ftc.teamcode.macros.PathStep;
-import org.firstinspires.ftc.teamcode.macros.RobotComponents;
+import org.firstinspires.ftc.teamcode.components.RobotComponents;
 
-public class DumpMacro extends PathStep {
+public class DumpBucketMacro extends PathStep {
 
     private static final double BUCKET_GOAL_POS = 0.31;
 
     private MotorPath upPath = null;
 
     @Override
-    public void start() {
-        super.start();
+    public void onStart(){
+        ;
 
 
 
@@ -27,7 +27,7 @@ public class DumpMacro extends PathStep {
     private boolean goOnce = true;
 
     @Override
-    public void tick(OpMode opMode) {
+    public void onTick(OpMode opMode) {
         if (upPath.isComplete(10)) {
             if (goOnce) {
                 goOnce = false;

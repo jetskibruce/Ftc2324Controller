@@ -18,7 +18,10 @@ public abstract class PathStep {
 
     public void start() {
         running = true;
+        onStart();
     }
+
+    public abstract void onStart();
 
     public void setHostPath(MacroSequence path) {
         hostPath = path;
@@ -26,11 +29,11 @@ public abstract class PathStep {
 
     public void finish() {
         running = false;
-        if (hostPath != null) {
+        if (hostPath != null && !hostPath.Finished) {
             hostPath.runNext();
         }
     }
 
-    public abstract void tick(OpMode opMode);
+    public abstract void onTick(OpMode opMode);
 
 }

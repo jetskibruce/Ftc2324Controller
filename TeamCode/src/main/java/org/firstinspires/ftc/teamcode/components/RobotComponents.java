@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.macros;
+package org.firstinspires.ftc.teamcode.components;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.excutil.coroutines.CoroutineManager;
+import org.firstinspires.ftc.teamcode.macros.MacroSequence;
 import org.firstinspires.ftc.teamcode.util.Encoder;
 
 import java.util.ArrayList;
@@ -41,6 +42,8 @@ public class RobotComponents {
     public static DcMotorEx back_right = null;
 
     public static DcMotor tower_motor = null;
+
+    public static DcMotor front_intake_motor = null;
 
     public static Servo wrist_servo;
     public static Servo bucket_servo;
@@ -81,8 +84,10 @@ public class RobotComponents {
         tower_motor = registerEncodedMotor(hardwareMap, "tower_motor", "Tower Motor");
         tower_motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        parallelEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "front_left"));
-        perpendicularEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "back_right"));
+        front_intake_motor = hardwareMap.get(DcMotor.class, "front_intake_motor");
+
+        parallelEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "back_right"));
+        perpendicularEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "back_left"));
 
         wrist_servo = registerServo(hardwareMap, "wrist_servo", "Wrist Servo");
         bucket_servo = registerServo(hardwareMap, "bucket_servo", "Bucket Servo");

@@ -1,14 +1,10 @@
 package org.firstinspires.ftc.teamcode.macros.tuckdown;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.robot.Robot;
 
-import org.firstinspires.ftc.teamcode.excutil.RMath;
 import org.firstinspires.ftc.teamcode.excutil.coroutines.CoroutineResult;
-import org.firstinspires.ftc.teamcode.macros.Flag;
 import org.firstinspires.ftc.teamcode.macros.PathStep;
-import org.firstinspires.ftc.teamcode.macros.RobotComponents;
+import org.firstinspires.ftc.teamcode.components.RobotComponents;
 
 public class WristTuckMacro extends PathStep {
 
@@ -17,8 +13,8 @@ public class WristTuckMacro extends PathStep {
 
 
     @Override
-    public void start() {
-        super.start();
+    public void onStart(){
+        ;
 
         RobotComponents.bucket_servo.setPosition(BUCKET_SERVO_POS);
         RobotComponents.coroutines.startRoutineLater((mode, d) -> {
@@ -32,7 +28,7 @@ public class WristTuckMacro extends PathStep {
     }
 
     @Override
-    public void tick(OpMode opMode) {
+    public void onTick(OpMode opMode) {
     }
 
 }

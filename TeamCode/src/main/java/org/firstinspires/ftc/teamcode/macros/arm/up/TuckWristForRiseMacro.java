@@ -1,14 +1,13 @@
-package org.firstinspires.ftc.teamcode.macros.tuckdown;
+package org.firstinspires.ftc.teamcode.macros.arm.up;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.robot.Robot;
 
 import org.firstinspires.ftc.teamcode.excutil.MotorPath;
 import org.firstinspires.ftc.teamcode.excutil.coroutines.CoroutineResult;
 import org.firstinspires.ftc.teamcode.macros.PathStep;
-import org.firstinspires.ftc.teamcode.macros.RobotComponents;
+import org.firstinspires.ftc.teamcode.components.RobotComponents;
 
-public class PrepPoseMacro extends PathStep {
+public class TuckWristForRiseMacro extends PathStep {
 
     private static final double WRIST_GOAL_POS = 0.73;
     private static final double BUCKET_GOAL_POS = 0.378;
@@ -16,8 +15,8 @@ public class PrepPoseMacro extends PathStep {
     private MotorPath upPath = null;
 
     @Override
-    public void start() {
-        super.start();
+    public void onStart(){
+        ;
 
         upPath = MotorPath.runToPosition(RobotComponents.tower_motor, 480, 0.6);
 
@@ -37,7 +36,7 @@ public class PrepPoseMacro extends PathStep {
     }
 
     @Override
-    public void tick(OpMode opMode) {
+    public void onTick(OpMode opMode) {
 
     }
 

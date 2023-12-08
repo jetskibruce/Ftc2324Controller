@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.excutil.coroutines.CoroutineResult;
 import org.firstinspires.ftc.teamcode.macros.PathStep;
-import org.firstinspires.ftc.teamcode.macros.RobotComponents;
+import org.firstinspires.ftc.teamcode.components.RobotComponents;
 import org.firstinspires.ftc.teamcode.opmodes.auto.DriveForwardAuto;
 
 public class DriveBackMacro extends PathStep {
@@ -18,7 +18,7 @@ public class DriveBackMacro extends PathStep {
     }
 
     @Override
-    public void start() {
+    public void onStart(){
         RobotComponents.back_intake_servo.setPower(-1);
         RobotComponents.front_intake_servo.setPower(-1);
         DriveForwardAuto.equalPowers(0.2);
@@ -33,7 +33,7 @@ public class DriveBackMacro extends PathStep {
     }
 
     @Override
-    public void tick(OpMode opMode) {
+    public void onTick(OpMode opMode) {
 
     }
 

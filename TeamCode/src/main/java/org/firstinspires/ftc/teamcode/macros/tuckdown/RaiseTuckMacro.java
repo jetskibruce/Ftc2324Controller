@@ -1,14 +1,10 @@
 package org.firstinspires.ftc.teamcode.macros.tuckdown;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.robot.Robot;
 
 import org.firstinspires.ftc.teamcode.excutil.MotorPath;
-import org.firstinspires.ftc.teamcode.excutil.RMath;
-import org.firstinspires.ftc.teamcode.excutil.coroutines.CoroutineResult;
 import org.firstinspires.ftc.teamcode.macros.PathStep;
-import org.firstinspires.ftc.teamcode.macros.RobotComponents;
+import org.firstinspires.ftc.teamcode.components.RobotComponents;
 
 public class RaiseTuckMacro extends PathStep {
 
@@ -18,7 +14,7 @@ public class RaiseTuckMacro extends PathStep {
     public MotorPath raisePath = null;
 
     @Override
-    public void start() {
+    public void onStart(){
         RobotComponents.tower_motor.setPower(0.61);
         raisePath = MotorPath.runToPosition(RobotComponents.tower_motor, RAISE_GOAL_TICKS, 0.61);
        // RobotComponents.bucket_servo.setPosition(BUCKET_GOAL_POS);
@@ -29,7 +25,7 @@ public class RaiseTuckMacro extends PathStep {
     }
 
     @Override
-    public void tick(OpMode opMode) {
+    public void onTick(OpMode opMode) {
         if (raisePath.isComplete(20)) {
             finish();
 
