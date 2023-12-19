@@ -34,6 +34,7 @@ public class Servo_Arm_Test_2 extends OpMode {
     private DcMotor back_right  = null;
 
     private DcMotor tower_motor = null;
+    private DcMotor climb_motor = null;
 
     private CRServo intake_servo = null;
 
@@ -68,6 +69,7 @@ public class Servo_Arm_Test_2 extends OpMode {
         back_right   = getMotor("back_right");
 
         tower_motor = getMotor("tower_motor");
+        climb_motor = getMotor("climb_motor");
 
         intake_servo = hardwareMap.get(CRServo.class, "intake_servo");
 

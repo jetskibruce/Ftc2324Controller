@@ -16,7 +16,6 @@ public class TuckWristForRiseMacro extends PathStep {
 
     @Override
     public void onStart(){
-        ;
 
         upPath = MotorPath.runToPosition(RobotComponents.tower_motor, -10, 0.6);
 

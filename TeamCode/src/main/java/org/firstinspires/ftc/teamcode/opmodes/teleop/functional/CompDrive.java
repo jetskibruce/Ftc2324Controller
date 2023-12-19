@@ -30,6 +30,9 @@ public class CompDrive extends OpMode {
 
     private SampleMecanumDrive drive = null;
 
+    private int current_pos = 0;
+    private int next_pos = 0;
+
     private boolean isArmUp = false;  // Use initializers
     @Override
     public void init() {
@@ -42,6 +45,7 @@ public class CompDrive extends OpMode {
 
         RobotComponents.init(hardwareMap);
         RobotComponents.tower_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        RobotComponents.climb_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         // RE_ENABLE BEFORE POSES
         //MacroSequence.compose("Init Intake Macro", new IntakePoseMacro()).start();
@@ -52,8 +56,11 @@ public class CompDrive extends OpMode {
         // Start in the 0 position
         RobotComponents.tower_motor.setTargetPosition(0);
         telemetry.addData("tower pos ", RobotComponents.tower_motor.getCurrentPosition());
+        telemetry.addData("climb pos ", RobotComponents.climb_motor.getCurrentPosition());
         RobotComponents.tower_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         RobotComponents.tower_motor.setPower(0.3);
+        RobotComponents.climb_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        RobotComponents.climb_motor.setPower(1);
     }
 
     
@@ -73,14 +80,30 @@ public class CompDrive extends OpMode {
 
         pollTowerInputs();
 
+        pollClimbInputs();
+
         pollIntakeInputs();
 
         pollDriveInputs();
+
+        telemetry.addData("climb pos ", RobotComponents.climb_motor.getCurrentPosition());
 
         telemetry.update();
 
     }
 
+
+    public void pollClimbInputs() {
+
+        current_pos = RobotComponents.climb_motor.getCurrentPosition();
+
+        if (input.x.down() && current_pos < 100000) {
+           next_pos = current_pos + 8000;
+        } else if (input.y.down()  && current_pos > 0) {
+            next_pos = current_pos - 8000;
+        }
+        RobotComponents.climb_motor.setTargetPosition(next_pos);
+    }
 
     public void pollTowerInputs() {
         if ((input.right_trigger.down() || input.left_trigger.down())&& !MacroSequence.isRunning()) {

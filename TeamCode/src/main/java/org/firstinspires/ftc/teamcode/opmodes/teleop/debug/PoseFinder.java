@@ -51,6 +51,7 @@ public class PoseFinder extends OpMode {
         RobotComponents.init(this.hardwareMap);
 
         RobotComponents.tower_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        RobotComponents.climb_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
     boolean inExactPoseMode = false;

@@ -42,6 +42,7 @@ public class RobotComponents {
     public static DcMotorEx back_right = null;
 
     public static DcMotor tower_motor = null;
+    public static DcMotor climb_motor = null;
 
     public static DcMotor front_intake_motor = null;
 
@@ -82,7 +83,9 @@ public class RobotComponents {
         back_right = hardwareMap.get(DcMotorEx.class, "back_right");
 
         tower_motor = registerEncodedMotor(hardwareMap, "tower_motor", "Tower Motor");
+        climb_motor = registerEncodedMotor(hardwareMap, "climb_motor", "Climb Motor");
         tower_motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        climb_motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         front_intake_motor = hardwareMap.get(DcMotor.class, "front_intake_motor");
 

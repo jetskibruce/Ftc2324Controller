@@ -18,6 +18,7 @@ public class RaiseTuckMacro extends PathStep {
         RobotComponents.tower_motor.setPower(0.61);
         raisePath = MotorPath.runToPosition(RobotComponents.tower_motor, RAISE_GOAL_TICKS, 0.61);
        // RobotComponents.bucket_servo.setPosition(BUCKET_GOAL_POS);
+        RobotComponents.climb_motor.setPower(0.61);
 
         RobotComponents.coroutines.runLater(() -> {
          //   RobotComponents.bucket_servo.setPosition(BUCKET_GOAL_POS * 3);
