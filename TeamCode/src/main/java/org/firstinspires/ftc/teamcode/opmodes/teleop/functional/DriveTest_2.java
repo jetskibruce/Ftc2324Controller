@@ -130,7 +130,8 @@ public class DriveTest_2 extends OpMode {
     }
 
     public static float deadZone(float val) {
-        return (val > -deadZoneThreshold && val < deadZoneThreshold) ? 0 : val;
+        return val;
+        //return (val > -deadZoneThreshold && val < deadZoneThreshold) ? 0 : val;
     }
 
     @Override

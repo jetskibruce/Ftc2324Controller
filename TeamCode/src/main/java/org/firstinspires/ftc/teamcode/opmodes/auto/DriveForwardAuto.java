@@ -67,15 +67,20 @@ public class DriveForwardAuto extends OpMode {
             equalPowers(-DRIVE_SPEED);
         }
 
+        start = RobotComponents.parallelEncoder.getCurrentPosition();
+
     }
+
+    int start;
 
     boolean dumponce = true;
 
     @Override
     public void loop() {
+        telemetry.addData("parallel encoder ", RobotComponents.parallelEncoder.getCurrentPosition());
         //if (true) return;
-        //RobotComponents.tickSystems(this);
-        if (runtime.seconds() > 6 || Math.abs(RobotComponents.parallelEncoder.getCurrentPosition()) >= Math.abs(GOAL_TICKS)) {
+        RobotComponents.tickSystems(this);
+        if (runtime.seconds() > 6 || Math.abs(RobotComponents.parallelEncoder.getCurrentPosition() - start) >= Math.abs(GOAL_TICKS)) {
             equalPowers(0);
             dumponce = false;
 

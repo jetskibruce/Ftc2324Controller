@@ -37,6 +37,7 @@ public class WheelDebugger extends LinearOpMode {
             if (input.right_trigger.down()) {
                 force = 0.3f;
                 spin0 = new Flag(); spin1 = new Flag(); spin2 = new Flag(); spin3 = new Flag();
+
                 debugOn.toggle();
             }
 
@@ -49,6 +50,8 @@ public class WheelDebugger extends LinearOpMode {
                         )
                 );
             } else {
+                telemetry.addData("Right trigger to disable debug individuals", "");
+                telemetry.addData("XABY to toggle wheels", "Left stick up/down for power");
 
                 float v0 = 0, v1 = 0, v2 = 0, v3 = 0;
 
@@ -91,6 +94,8 @@ public class WheelDebugger extends LinearOpMode {
             telemetry.addData("x", poseEstimate.getX());
             telemetry.addData("y", poseEstimate.getY());
             telemetry.addData("heading", poseEstimate.getHeading());
+
+            telemetry.addData("Right trigger to enable debug individuals", "");
             telemetry.update();
         }
     }

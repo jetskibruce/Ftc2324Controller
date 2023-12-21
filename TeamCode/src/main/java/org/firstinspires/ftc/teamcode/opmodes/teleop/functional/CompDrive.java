@@ -55,6 +55,7 @@ public class CompDrive extends OpMode {
         isArmUp = false;  // Use initializers
         // Start in the 0 position
         RobotComponents.tower_motor.setTargetPosition(0);
+        RobotComponents.climb_motor.setTargetPosition(0);
         telemetry.addData("tower pos ", RobotComponents.tower_motor.getCurrentPosition());
         telemetry.addData("climb pos ", RobotComponents.climb_motor.getCurrentPosition());
         RobotComponents.tower_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -97,10 +98,10 @@ public class CompDrive extends OpMode {
 
         current_pos = RobotComponents.climb_motor.getCurrentPosition();
 
-        if (input.x.down() && current_pos < 100000) {
-           next_pos = current_pos + 8000;
+        if (input.x.down() && current_pos < 100_000) {
+           next_pos = current_pos + 45_000;
         } else if (input.y.down()  && current_pos > 0) {
-            next_pos = current_pos - 8000;
+            next_pos = current_pos - 45_000;
         }
         RobotComponents.climb_motor.setTargetPosition(next_pos);
     }
