@@ -46,6 +46,11 @@ public class Input {
     public ButtonState left_bumper = new ButtonState();
     public ButtonState right_bumper = new ButtonState();
 
+    public ButtonState dpad_down = new ButtonState();
+    public ButtonState dpad_left = new ButtonState();
+    public ButtonState dpad_right = new ButtonState();
+    public ButtonState dpad_up = new ButtonState();
+
 
     public void pollGamepad(Gamepad gamepad) {
         updateState(a, gamepad.a);
@@ -58,6 +63,11 @@ public class Input {
 
         updateState(left_bumper, gamepad.left_bumper);
         updateState(right_bumper, gamepad.right_bumper);
+
+        updateState(dpad_down, gamepad.dpad_down);
+        updateState(dpad_left, gamepad.dpad_left);
+        updateState(dpad_right, gamepad.dpad_right);
+        updateState(dpad_up, gamepad.dpad_up);
     }
 
     public void updateState(ButtonState state, boolean heldNow) {

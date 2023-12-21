@@ -152,6 +152,8 @@ public class PoseFinder extends OpMode {
         servoSpeedMultiplier = 1;
     }
 
+    public boolean wormedMotorMode = false;
+
     private Map<Integer, Double> servoIdxToPos = new HashMap<>();
     RobotComponents.ServoComponent currentServo = null;
     int currentServoIdx = -1;
@@ -234,46 +236,32 @@ public class PoseFinder extends OpMode {
     int motorPoseTickrateMultiplier = 2;
 
     private static final double MOTOR_SPEED_INCREMENT = 0.015;
-    private static final int MOTOR_SPEED_LOOPSPACE = 90;
+    private static final int MOTOR_SPEED_LOOPSPACE = 70;
 
     private static final double MOTOR_TICKRATE_INCREMENT = 1;
-    private static final int MOTOR_TICKRATE_LOOPSPACE = 130;
+    private static final int MOTOR_TICKRATE_LOOPSPACE = 90;
 
     private static final int IMPRECISE_LOOPSPACE = 10;
+
+    double modByTicksHeld(double tickrate, Input.ButtonState button) {
+        return modByTicksHeld(tickrate, button.numTicksHeld);
+    }
+
+    double modByTicksHeld(double tickrate, int numTicksHeld) {
+        return tickrate * (int)((numTicksHeld / 90) + 1);
+    }
 
     private void handleMotorPoseMode() {
         telemetry.addData("Posing motor " + currentMotor.name, "(idx " + currentMotorIdx + ")");
 
-        if (inExactPoseMode) {
-            if (input.x.down()) currentMotorTicks -= 1 * motorPoseTickrateMultiplier;
-            if (input.y.down()) currentMotorTicks += 1 * motorPoseTickrateMultiplier;
-        } else {
-            if (input.right_trigger.held() && (input.right_trigger.numTicksHeld % IMPRECISE_LOOPSPACE == 0))
-                currentMotorTicks += 1 * motorPoseTickrateMultiplier;
-
-            if (input.left_trigger.held() && (input.left_trigger.numTicksHeld % IMPRECISE_LOOPSPACE == 0))
-                currentMotorTicks -= 1 * motorPoseTickrateMultiplier;
+        if (input.dpad_up.down()) {
+            wormedMotorMode = !wormedMotorMode;
         }
 
-        // +1 because 0 % x always == 0
-        if ((numTicksLeftStickUp + 1) % MOTOR_SPEED_LOOPSPACE == 0) {
-            motorSpeed += MOTOR_SPEED_INCREMENT;
-            //currentMotor.motor.setPower(motorSpeed);
-        }
-
-        if ((numTicksLeftStickDown + 1) % MOTOR_SPEED_LOOPSPACE == 0) {
-            motorSpeed -= MOTOR_SPEED_INCREMENT;
-            //currentMotor.motor.setPower(motorSpeed);
-        }
-
-        // +1 because 0 % x always == 0
-        if ((numTicksRightStickUp + 1) % MOTOR_TICKRATE_LOOPSPACE == 0) {
-            motorPoseTickrateMultiplier += MOTOR_TICKRATE_INCREMENT;
-        }
-
-        if ((numTicksRightStickDown + 1) % MOTOR_TICKRATE_LOOPSPACE == 0) {
-            motorPoseTickrateMultiplier -= MOTOR_TICKRATE_INCREMENT;
-        }
+        if (!wormedMotorMode)
+            telemetry.addData("Engage manual drive mode with DPAD Up.", "");
+        else
+            telemetry.addData("Disengage manual drive mode with DPAD Down.", "");
 
         // reset multiplier control
         if (gamepad1.left_stick_x < -0.8)
@@ -282,20 +270,74 @@ public class PoseFinder extends OpMode {
         if (gamepad1.right_stick_x < -0.8)
             motorPoseTickrateMultiplier = 2;
 
+        // +1 because 0 % x always == 0
+        if ((numTicksLeftStickUp + 1) % MOTOR_SPEED_LOOPSPACE == 0) {
+            motorSpeed += modByTicksHeld(MOTOR_SPEED_INCREMENT,numTicksLeftStickUp);
+            //currentMotor.motor.setPower(motorSpeed);
+        }
+
+        if ((numTicksLeftStickDown + 1) % MOTOR_SPEED_LOOPSPACE == 0) {
+            motorSpeed -= modByTicksHeld(MOTOR_SPEED_INCREMENT,numTicksLeftStickDown);
+            //currentMotor.motor.setPower(motorSpeed);
+        }
+
+        // +1 because 0 % x always == 0
+        if ((numTicksRightStickUp + 1) % MOTOR_TICKRATE_LOOPSPACE == 0) {
+            motorPoseTickrateMultiplier += modByTicksHeld(MOTOR_TICKRATE_INCREMENT, numTicksRightStickUp);
+        }
+
+        if ((numTicksRightStickDown + 1) % MOTOR_TICKRATE_LOOPSPACE == 0) {
+            motorPoseTickrateMultiplier -= modByTicksHeld(MOTOR_TICKRATE_INCREMENT, numTicksRightStickDown);
+        }
+
         motorSpeed = RMath.clamp(motorSpeed, 0, 1);
 
         currentMotor.motor.setPower(motorSpeed);
 
-        if (currentMotorTicks != lastTicks) {
-            currentMotor.motor.setTargetPosition(currentMotorTicks);
-            currentMotor.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            //currentMotor.motor.setDirection(DcMotorSimple.Direction.REVERSE);
+        if (!wormedMotorMode) {
+            if (inExactPoseMode) {
+                if (input.x.down()) currentMotorTicks -= 1 * motorPoseTickrateMultiplier;
+                if (input.y.down()) currentMotorTicks += 1 * motorPoseTickrateMultiplier;
+            } else {
+                if (input.right_trigger.held() && (input.right_trigger.numTicksHeld % IMPRECISE_LOOPSPACE == 0))
+                    currentMotorTicks += 1 * motorPoseTickrateMultiplier;
+
+                if (input.left_trigger.held() && (input.left_trigger.numTicksHeld % IMPRECISE_LOOPSPACE == 0))
+                    currentMotorTicks -= 1 * motorPoseTickrateMultiplier;
+            }
+
+
+
+            if (currentMotorTicks != lastTicks) {
+                currentMotor.motor.setTargetPosition(currentMotorTicks);
+                currentMotor.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                //currentMotor.motor.setDirection(DcMotorSimple.Direction.REVERSE);
+
+            }
+
+            telemetry.addData("Motor target position is ", currentMotorTicks);
+
+        } else {
+            lastTicks = currentMotor.motor.getCurrentPosition();
+            currentMotor.motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+            if(input.left_trigger.held()) {
+                currentMotor.motor.setPower(-motorSpeed * ((inExactPoseMode) ? 1 : gamepad1.left_trigger));
+            } else if(input.right_trigger.held()) {
+                currentMotor.motor.setPower(motorSpeed * ((inExactPoseMode) ? 1 : gamepad1.right_trigger));
+            } else {
+                currentMotor.motor.setPower(0);
+            }
 
         }
 
 
 
-        telemetry.addData("Motor target position is ", currentMotorTicks);
+
+
+
+
+
         telemetry.addData("Tickrate increment multiplier: ", motorPoseTickrateMultiplier + "x");
         telemetry.addData("Motor power: ", motorSpeed + "/1");
         telemetry.addData("Current motor position: ", currentMotor.motor.getCurrentPosition());
@@ -324,6 +366,8 @@ public class PoseFinder extends OpMode {
 
         Integer savedTicks = motorIdxToTicks.get(currentMotorIdx);
         currentMotorTicks = (savedTicks == null) ? 0 : savedTicks;
+
+        wormedMotorMode = false;
 
         //currentMotor.motor.setPower(motorSpeed);
     }

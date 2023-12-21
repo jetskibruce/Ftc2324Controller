@@ -121,18 +121,14 @@ public class DriveTest_2 extends OpMode {
 
     private static float deadZoneThreshold = 0.6f;
 
-    float deadZoneImproved(float x) {
-        return (float)(
-                (Math.abs(x) < deadZoneThreshold)
-                        ? Math.pow(-8, -Math.pow(x, 2)) + 1.125
-                        : 0
-        );
-    }
 
-    public static float deadZone(float val) {
-        return val;
+    public static double deadZone(float val) {
+        return Math.pow(RMath.clamp(val, -1.0, 1.0), 3);
+        //return val;
         //return (val > -deadZoneThreshold && val < deadZoneThreshold) ? 0 : val;
     }
+
+
 
     @Override
     public void loop() {
@@ -143,9 +139,11 @@ public class DriveTest_2 extends OpMode {
 
         input.pollGamepad(gamepad1);
 
-        double drive = -deadZone(gamepad1.left_stick_x);
-        double strafe = -deadZone(gamepad1.left_stick_y);
-        double twist = -deadZone(gamepad1.right_stick_x);
+
+
+        double drive = deadZone(gamepad1.left_stick_x);
+        double strafe = deadZone(gamepad1.left_stick_y);
+        double twist = deadZone(gamepad1.right_stick_x);
 
         double[] speeds = {
                 (drive + strafe + twist),

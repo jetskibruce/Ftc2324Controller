@@ -1,5 +1,9 @@
 package org.firstinspires.ftc.teamcode.opmodes.teleop.functional;
 
+import android.app.Activity;
+import android.graphics.Color;
+import android.view.View;
+
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -24,6 +28,8 @@ import org.firstinspires.ftc.teamcode.macros.generic.RunActionMacro;
 @TeleOp(group = "drive", name = "Competition Drive")
 public class CompDrive extends OpMode {
 
+    View androidUI;
+
     private Input input;
 
     private int lastTowerGoalTicks = 0;
@@ -34,6 +40,18 @@ public class CompDrive extends OpMode {
     private int next_pos = 0;
 
     private boolean isArmUp = false;  // Use initializers
+
+    @Override
+    public void start() {
+        if (Math.random() < 0.12)
+            if (Math.random() < 0.8)
+                telemetry.speak("Beep boop beep boop... I am a robot.");
+            else
+                telemetry.speak("File the intake again.");
+
+        setUIColor(Color.GRAY);
+    }
+
     @Override
     public void init() {
 
@@ -61,14 +79,32 @@ public class CompDrive extends OpMode {
         RobotComponents.tower_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         RobotComponents.tower_motor.setPower(0.3);
         RobotComponents.climb_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        RobotComponents.climb_motor.setPower(1);
+        RobotComponents.climb_motor.setPower(CLIMB_POWER);
+
+        int relativeLayoutId = hardwareMap.appContext.getResources().getIdentifier("RelativeLayout", "id", hardwareMap.appContext.getPackageName());
+        androidUI = ((Activity) hardwareMap.appContext).findViewById(relativeLayoutId);
+
+
+
     }
 
+    double CLIMB_POWER = 1;
+
+    private void setUIColor(int color) {
+        if (androidUI == null) return;
+        androidUI.post(new Runnable() {
+            public void run() {
+                androidUI.setBackgroundColor(color);
+            }
+        });
+    }
     
     Flag intakeOn = new Flag();
 
     @Override
     public void loop() {
+
+
 
         RobotComponents.tickSystems(this);
 //
@@ -78,6 +114,8 @@ public class CompDrive extends OpMode {
 //        RobotComponents.tower_motor.setPower(0.3);
 
         input.pollGamepad(gamepad1);
+
+
 
         pollTowerInputs();
 
@@ -103,7 +141,15 @@ public class CompDrive extends OpMode {
         } else if (input.y.down()  && current_pos > 0) {
             next_pos = current_pos - 45_000;
         }
-        RobotComponents.climb_motor.setTargetPosition(next_pos);
+
+        if (gamepad1.back) {
+            RobotComponents.climb_motor.setPower(0);
+            RobotComponents.climb_motor.setTargetPosition(RobotComponents.climb_motor.getCurrentPosition());
+        } else {
+            RobotComponents.climb_motor.setPower(CLIMB_POWER);
+            RobotComponents.climb_motor.setTargetPosition(next_pos);
+        }
+
     }
 
     public void pollTowerInputs() {
@@ -127,7 +173,7 @@ public class CompDrive extends OpMode {
                             new ArmToDumpPointMacro(),
                             new DumpBucketMacro(),
                             new RunActionMacro((o) -> {
-                                telemetry.speak("get dunked on");
+                                //telemetry.speak("get dunked on");
                                 isArmUp = true;
                                 return false;
                             })
@@ -167,13 +213,53 @@ public class CompDrive extends OpMode {
         RobotComponents.front_intake_motor.setPower(-direction * speedMult);
     }
 
+    public boolean flipControls = false;
+
+    public double inputMult = normalInputMult;
+
+    private static final double normalInputMult = 1.0;
+    private static final double slowInputMult = 0.8;
+    private static final double preciseInputMult = 0.6;
+
+    ElapsedTime periodicAlertTimer = new ElapsedTime();
+
     public void pollDriveInputs() {
+
+        if (input.dpad_down.down()) {
+            flipControls = !flipControls;
+            telemetry.speak((flipControls) ? "Reverse, reverse." : "Ahead standard.");
+            if (flipControls)
+                setUIColor(Color.DKGRAY);
+            else
+                setUIColor(Color.GRAY);
+        }
+
+        if (input.dpad_left.down()) {
+            if (inputMult == normalInputMult) {
+                inputMult = slowInputMult;
+                telemetry.speak("Slowing down.");
+            }
+            else if (inputMult == slowInputMult) {
+                inputMult = preciseInputMult;
+                telemetry.speak("Snail's pace.");
+            }
+            else if (inputMult == preciseInputMult) {
+                inputMult = normalInputMult;
+                telemetry.speak("Speed normalized.");
+            }
+
+        }
+
+
+
+
+
         drive.setWeightedDrivePower(
                 new Pose2d(
-                        -DriveTest_2.deadZone(-gamepad1.left_stick_y), // swapped 1 & 2
-                        DriveTest_2.deadZone(gamepad1.left_stick_x),
-                        -DriveTest_2.deadZone(-gamepad1.right_stick_x)
-                )
+                        -DriveTest_2.deadZone(-gamepad1.left_stick_y) * ((flipControls) ? -1 : 1), // swapped 1 & 2
+                        DriveTest_2.deadZone(gamepad1.left_stick_x) * ((flipControls) ? -1 : 1),
+                        -DriveTest_2.deadZone(-gamepad1.right_stick_x) * ((flipControls) ? -1 : 1)
+                ).times(inputMult)
         );
 
 
