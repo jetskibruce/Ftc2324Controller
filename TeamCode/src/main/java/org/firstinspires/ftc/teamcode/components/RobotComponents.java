@@ -48,9 +48,11 @@ public class RobotComponents {
 
     public static Servo wrist_servo;
     public static Servo bucket_servo;
+    public static Servo left_pixel_hold_servo;
+    public static Servo right_pixel_hold_servo;
 
     public static CRServo back_intake_servo;
-    public static CRServo front_intake_servo;
+    public static Servo climber_clasp_servo;
 
     public static Encoder parallelEncoder, perpendicularEncoder;
 
@@ -95,10 +97,12 @@ public class RobotComponents {
         wrist_servo = registerServo(hardwareMap, "wrist_servo", "Wrist Servo");
         bucket_servo = registerServo(hardwareMap, "bucket_servo", "Bucket Servo");
 
-        front_intake_servo = hardwareMap.get(CRServo.class, "front_intake_servo");
+        climber_clasp_servo = hardwareMap.get(Servo.class, "climber_clasp");
+
         back_intake_servo = hardwareMap.get(CRServo.class, "back_intake_servo");
 
-
+        left_pixel_hold_servo = hardwareMap.get(Servo.class, "bucket_left");
+        right_pixel_hold_servo = hardwareMap.get(Servo.class, "bucket_right");
     }
 
     public static void tickSystems(OpMode activeMode) {

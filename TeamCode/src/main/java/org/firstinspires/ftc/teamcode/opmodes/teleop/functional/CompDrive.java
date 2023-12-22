@@ -41,6 +41,10 @@ public class CompDrive extends OpMode {
 
     private boolean isArmUp = false;  // Use initializers
 
+    private static final double PIXEL_RELEASE_POSITION = 0.5;
+    private static final double PIXEL_HOLD_POSITION = 1.0;
+
+
     @Override
     public void start() {
         if (Math.random() < 0.12)
@@ -50,6 +54,9 @@ public class CompDrive extends OpMode {
                 telemetry.speak("File the intake again.");
 
         setUIColor(Color.GRAY);
+
+
+
     }
 
     @Override
@@ -65,6 +72,8 @@ public class CompDrive extends OpMode {
         RobotComponents.tower_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         RobotComponents.climb_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
+        RobotComponents.left_pixel_hold_servo.setPosition(PIXEL_RELEASE_POSITION);
+        RobotComponents.right_pixel_hold_servo.setPosition(PIXEL_RELEASE_POSITION);
         // RE_ENABLE BEFORE POSES
         //MacroSequence.compose("Init Intake Macro", new IntakePoseMacro()).start();
 
@@ -125,10 +134,25 @@ public class CompDrive extends OpMode {
 
         pollDriveInputs();
 
+        pollPixelInputs();
+
+
         telemetry.addData("climb pos ", RobotComponents.climb_motor.getCurrentPosition());
 
         telemetry.update();
 
+    }
+
+    public void pollPixelInputs() {
+
+        if (input.a.down()) {
+            RobotComponents.left_pixel_hold_servo.setPosition(PIXEL_HOLD_POSITION);
+            RobotComponents.right_pixel_hold_servo.setPosition( PIXEL_HOLD_POSITION);
+        }
+        else if (input.b.down()) {
+                RobotComponents.left_pixel_hold_servo.setPosition(PIXEL_RELEASE_POSITION);
+                RobotComponents.right_pixel_hold_servo.setPosition(PIXEL_RELEASE_POSITION);
+        }
     }
 
 

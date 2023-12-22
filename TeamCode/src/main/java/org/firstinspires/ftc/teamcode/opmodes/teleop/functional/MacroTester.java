@@ -185,7 +185,6 @@ public class MacroTester extends LinearOpMode {
             double backPower = 1;
             double forePower = 1;
             RobotComponents.back_intake_servo.setPower(intake ? backPower : 0);
-            RobotComponents.front_intake_servo.setPower(intake ? forePower : 0);
 
             telemetry.addData("Tower Goal Position: ", goalTicks);
 

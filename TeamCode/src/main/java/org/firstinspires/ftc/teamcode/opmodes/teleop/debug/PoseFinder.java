@@ -136,8 +136,7 @@ public class PoseFinder extends OpMode {
 
         double backPower = 1;
         double forePower = 1;
-        RobotComponents.back_intake_servo.setPower(intake ? backPower : 0);
-        RobotComponents.front_intake_servo.setPower(intake ? forePower : 0);
+        RobotComponents.back_intake_servo.setPower(intake ? backPower : 0);;
 
         telemetry.addData("Bucket Encoder Ticks: ", RobotComponents.parallelEncoder.getCurrentPosition());
         telemetry.addData("Wrist Encoder Ticks: ", RobotComponents.perpendicularEncoder.getCurrentPosition());

@@ -19,14 +19,12 @@ public class DriveBackMacro extends PathStep {
 
     @Override
     public void onStart(){
-        RobotComponents.back_intake_servo.setPower(-1);
-        RobotComponents.front_intake_servo.setPower(-1);
+        RobotComponents.back_intake_servo.setPower(-1);;
         DriveForwardAuto.equalPowers(0.2);
         RobotComponents.coroutines.startRoutineLater((mode, d) -> {
             DriveForwardAuto.equalPowers(0);
 
-            RobotComponents.back_intake_servo.setPower(0);
-            RobotComponents.front_intake_servo.setPower(0);
+            RobotComponents.back_intake_servo.setPower(0);;
             finish();
             return CoroutineResult.Stop;
         }, delay);
