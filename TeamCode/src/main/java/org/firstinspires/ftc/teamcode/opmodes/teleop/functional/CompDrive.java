@@ -43,6 +43,8 @@ public class CompDrive extends OpMode {
 
     private static final double PIXEL_RELEASE_POSITION = 0.5;
     private static final double PIXEL_HOLD_POSITION = 1.0;
+    private static final double CLIMBER_HOLD_POSITION = 1.0;
+    private static final double CLIMBER_RELEASE_POSITION = 0.0;
 
 
     @Override
@@ -74,6 +76,7 @@ public class CompDrive extends OpMode {
 
         RobotComponents.left_pixel_hold_servo.setPosition(PIXEL_RELEASE_POSITION);
         RobotComponents.right_pixel_hold_servo.setPosition(PIXEL_RELEASE_POSITION);
+        RobotComponents.climber_clasp_servo.setPosition(CLIMBER_HOLD_POSITION);
         // RE_ENABLE BEFORE POSES
         //MacroSequence.compose("Init Intake Macro", new IntakePoseMacro()).start();
 
@@ -92,8 +95,6 @@ public class CompDrive extends OpMode {
 
         int relativeLayoutId = hardwareMap.appContext.getResources().getIdentifier("RelativeLayout", "id", hardwareMap.appContext.getPackageName());
         androidUI = ((Activity) hardwareMap.appContext).findViewById(relativeLayoutId);
-
-
 
     }
 
@@ -160,21 +161,26 @@ public class CompDrive extends OpMode {
 
         current_pos = RobotComponents.climb_motor.getCurrentPosition();
 
-        if (input.x.down() && current_pos < 100_000) {
-           next_pos = current_pos + 45_000;
-        } else if (input.y.down()  && current_pos > 0) {
-            next_pos = current_pos - 45_000;
+        if (input.y.down() && current_pos < 100000) {
+           next_pos = current_pos + 50000;
+            RobotComponents.climber_clasp_servo.setPosition(CLIMBER_RELEASE_POSITION);
         }
 
         if (gamepad1.back) {
             RobotComponents.climb_motor.setPower(0);
             RobotComponents.climb_motor.setTargetPosition(RobotComponents.climb_motor.getCurrentPosition());
+
         } else {
             RobotComponents.climb_motor.setPower(CLIMB_POWER);
             RobotComponents.climb_motor.setTargetPosition(next_pos);
         }
 
     }
+
+
+    int intakeIn = 1;
+    int intakeOut = -1;
+
 
     public void pollTowerInputs() {
         if ((input.right_trigger.down() || input.left_trigger.down())&& !MacroSequence.isRunning()) {
@@ -214,27 +220,28 @@ public class CompDrive extends OpMode {
     public void pollIntakeInputs() {
         int newDir = -999;
         if (input.left_bumper.down()) {
-            newDir = 1;
+            newDir = intakeIn;
         } else if (input.right_bumper.down()) {
-            newDir = -1;
+            newDir = intakeOut;
         }
 
-        if (input.x.down()) speedMult -= 0.02;
-        if (input.y.down()) speedMult += 0.02;
+        //if (input.x.down()) speedMult -= 0.02;
+        //if (input.y.down()) speedMult += 0.02;
 
         speedMult = RMath.clamp(speedMult, 0, 1);
 
-        // if you hit same button that's already on, it turns off
-        if (newDir == direction) {
-            direction = 0;
-        } else if (newDir != -999) {
-            direction = newDir;
+        // if you hit same button that's already on, it turns off - unless it is running for tower
+        if (!MacroSequence.isRunning()) {
+            if (newDir == direction) {
+                direction = 0;
+            } else if (newDir != -999) {
+                direction = newDir;
+            }
+            telemetry.addData("Intake on in dir: ", direction);
+
+            RobotComponents.back_intake_servo.setPower(direction * speedMult);
+            RobotComponents.front_intake_motor.setPower(direction * speedMult);
         }
-
-        telemetry.addData("Intake on in dir: ", direction);
-
-        RobotComponents.back_intake_servo.setPower(-direction * speedMult);
-        RobotComponents.front_intake_motor.setPower(-direction * speedMult);
     }
 
     public boolean flipControls = false;
@@ -271,7 +278,6 @@ public class CompDrive extends OpMode {
                 inputMult = normalInputMult;
                 telemetry.speak("Speed normalized.");
             }
-
         }
 
 

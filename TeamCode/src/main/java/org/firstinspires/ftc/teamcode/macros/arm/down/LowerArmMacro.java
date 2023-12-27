@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.components.RobotComponents;
 
 public class LowerArmMacro extends PathStep {
 
+
     private static final double WRIST_GOAL_POS = 0.60;
     private static final double BUCKET_GOAL_POS = 0.38;
 
@@ -16,7 +17,6 @@ public class LowerArmMacro extends PathStep {
 
     @Override
     public void onStart() {
-        ;
 
         downPath = MotorPath.runToPosition(RobotComponents.tower_motor, -120, 0.6);
 
@@ -30,6 +30,9 @@ public class LowerArmMacro extends PathStep {
             return CoroutineResult.Stop;
         }, 120);
     }
+
+        ;
+
 
     @Override
     public void onTick(OpMode opMode) {

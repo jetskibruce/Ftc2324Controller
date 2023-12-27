@@ -10,19 +10,16 @@ import org.firstinspires.ftc.teamcode.components.RobotComponents;
 public class ArmToDumpPointMacro extends PathStep {
 
     private static final double WRIST_GOAL_POS = 0.83;
-    private static final double BUCKET_GOAL_POS = 0.0;
+    private static final double BUCKET_GOAL_POS = 0.50;
 
     MotorPath upPath;
 
     @Override
     public void onStart() {
         ;
-
         RobotComponents.bucket_servo.setPosition(BUCKET_GOAL_POS);
 
-        upPath = MotorPath.runToPosition(RobotComponents.tower_motor, -980, 0.6);
-
-
+        upPath = MotorPath.runToPosition(RobotComponents.tower_motor, -1065, 0.6);
     }
 
     private boolean goOnce = true;
@@ -35,7 +32,6 @@ public class ArmToDumpPointMacro extends PathStep {
 
                 RobotComponents.wrist_servo.setPosition(WRIST_GOAL_POS);
 
-
                 RobotComponents.coroutines.startRoutineLater((mode, d) -> {
                     finish();
                     return CoroutineResult.Stop;
@@ -44,5 +40,11 @@ public class ArmToDumpPointMacro extends PathStep {
         }
     }
 
+    @Override
+    public void finish() {
+        RobotComponents.back_intake_servo.setPower(0);
+        RobotComponents.front_intake_motor.setPower(0);
+        super.finish();
+    }
 
 }

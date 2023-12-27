@@ -16,6 +16,7 @@ public class IntakePoseMacro extends PathStep {
     public void onStart(){
         ;
 
+
         MotorPath.runToPosition(RobotComponents.tower_motor, 0, 0.6);
 
         RobotComponents.wrist_servo.setPosition(WRIST_GOAL_POS);
@@ -33,5 +34,10 @@ public class IntakePoseMacro extends PathStep {
 
     }
 
-
+    @Override
+    public void finish() {
+        RobotComponents.back_intake_servo.setPower(0);
+        RobotComponents.front_intake_motor.setPower(0);
+        super.finish();
+    }
 }

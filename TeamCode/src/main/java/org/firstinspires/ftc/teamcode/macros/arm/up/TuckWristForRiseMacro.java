@@ -11,11 +11,14 @@ public class TuckWristForRiseMacro extends PathStep {
 
     private static final double WRIST_GOAL_POS = 0.73;
     private static final double BUCKET_GOAL_POS = 0.378;
+    int intakeIn = -1;
 
     private MotorPath upPath = null;
 
     @Override
     public void onStart(){
+        RobotComponents.back_intake_servo.setPower(intakeIn);
+        RobotComponents.front_intake_motor.setPower(intakeIn);
 
         upPath = MotorPath.runToPosition(RobotComponents.tower_motor, -10, 0.6);
 
