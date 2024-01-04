@@ -87,7 +87,7 @@ public class RobotComponents {
         tower_motor = registerEncodedMotor(hardwareMap, "tower_motor", "Tower Motor");
         climb_motor = registerEncodedMotor(hardwareMap, "climb_motor", "Climb Motor");
         tower_motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        climb_motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        //climb_motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         front_intake_motor = hardwareMap.get(DcMotor.class, "front_intake_motor");
 

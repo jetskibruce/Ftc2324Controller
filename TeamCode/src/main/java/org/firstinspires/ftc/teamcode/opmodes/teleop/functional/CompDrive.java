@@ -44,7 +44,7 @@ public class CompDrive extends OpMode {
     private static final double PIXEL_RELEASE_POSITION = 0.5;
     private static final double PIXEL_HOLD_POSITION = 1.0;
     private static final double CLIMBER_HOLD_POSITION = 1.0;
-    private static final double CLIMBER_RELEASE_POSITION = 0.0;
+    private static final double CLIMBER_RELEASE_POSITION = 0.6 ;
 
 
     @Override
@@ -72,7 +72,7 @@ public class CompDrive extends OpMode {
 
         RobotComponents.init(hardwareMap);
         RobotComponents.tower_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        RobotComponents.climb_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //RobotComponents.climb_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         RobotComponents.left_pixel_hold_servo.setPosition(PIXEL_RELEASE_POSITION);
         RobotComponents.right_pixel_hold_servo.setPosition(PIXEL_RELEASE_POSITION);
@@ -85,13 +85,13 @@ public class CompDrive extends OpMode {
         isArmUp = false;  // Use initializers
         // Start in the 0 position
         RobotComponents.tower_motor.setTargetPosition(0);
-        RobotComponents.climb_motor.setTargetPosition(0);
+        //RobotComponents.climb_motor.setTargetPosition(0);
         telemetry.addData("tower pos ", RobotComponents.tower_motor.getCurrentPosition());
-        telemetry.addData("climb pos ", RobotComponents.climb_motor.getCurrentPosition());
+        //telemetry.addData("climb pos ", RobotComponents.climb_motor.getCurrentPosition());
         RobotComponents.tower_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         RobotComponents.tower_motor.setPower(0.3);
-        RobotComponents.climb_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        RobotComponents.climb_motor.setPower(CLIMB_POWER);
+        //RobotComponents.climb_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //RobotComponents.climb_motor.setPower(CLIMB_POWER);
 
         int relativeLayoutId = hardwareMap.appContext.getResources().getIdentifier("RelativeLayout", "id", hardwareMap.appContext.getPackageName());
         androidUI = ((Activity) hardwareMap.appContext).findViewById(relativeLayoutId);
@@ -108,7 +108,7 @@ public class CompDrive extends OpMode {
             }
         });
     }
-    
+
     Flag intakeOn = new Flag();
 
     @Override
@@ -138,7 +138,7 @@ public class CompDrive extends OpMode {
         pollPixelInputs();
 
 
-        telemetry.addData("climb pos ", RobotComponents.climb_motor.getCurrentPosition());
+       // telemetry.addData("climb pos ", RobotComponents.climb_motor.getCurrentPosition());
 
         telemetry.update();
 
@@ -156,13 +156,26 @@ public class CompDrive extends OpMode {
         }
     }
 
+    public void pollClimbInputs(){
+        if (gamepad1.y) {
+            RobotComponents.climb_motor.setPower(1);
+            RobotComponents.climber_clasp_servo.setPosition(CLIMBER_RELEASE_POSITION);
 
-    public void pollClimbInputs() {
+        }
+        else {
+            RobotComponents.climb_motor.setPower(0);
+        }
+    }
+
+
+
+
+    /*public void pollClimbInputs() {
 
         current_pos = RobotComponents.climb_motor.getCurrentPosition();
 
         if (input.y.down() && current_pos < 100000) {
-           next_pos = current_pos + 50000;
+           next_pos = current_pos + 65000;
             RobotComponents.climber_clasp_servo.setPosition(CLIMBER_RELEASE_POSITION);
         }
 
@@ -175,7 +188,7 @@ public class CompDrive extends OpMode {
             RobotComponents.climb_motor.setTargetPosition(next_pos);
         }
 
-    }
+    }*/
 
 
     int intakeIn = 1;
