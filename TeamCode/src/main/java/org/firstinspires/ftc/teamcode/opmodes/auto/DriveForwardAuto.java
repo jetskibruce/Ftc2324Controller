@@ -13,11 +13,7 @@ import org.firstinspires.ftc.teamcode.macros.arm.IntakePoseMacro;
 
 @Autonomous(name="Drive Forward", group="Robot")
 public class DriveForwardAuto extends OpMode {
-    static final double     COUNTS_PER_ENCODER_REV    = 8192 ;    // eg: TETRIX Motor Encoder
-    static final double     ENCODER_GEAR_REDUCTION    = 1.0 ;     // No External Gearing.
-    static final double     WHEEL_DIAMETER_INCHES   = 2.0 ;     // For figuring circumference
-    static final double     COUNTS_PER_INCH         = (COUNTS_PER_ENCODER_REV * ENCODER_GEAR_REDUCTION) /
-            (WHEEL_DIAMETER_INCHES * 3.1415);
+
 
     static final double     DRIVE_SPEED             = 0.3;
     static final double     TURN_SPEED              = 0.5;
@@ -34,7 +30,7 @@ public class DriveForwardAuto extends OpMode {
     }
 
     static final double DISTANCE_IN = 36;
-    static final double GOAL_TICKS = DISTANCE_IN * COUNTS_PER_INCH;
+    static final double GOAL_TICKS = RobotComponents.encoderDistance(DISTANCE_IN);
 
     static DcMotor mFL, mFR, mBL, mBR;
 

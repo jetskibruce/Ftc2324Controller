@@ -10,33 +10,36 @@ import org.firstinspires.ftc.teamcode.components.RobotComponents;
 public class LowerArmMacro extends PathStep {
 
 
-    private static final double WRIST_GOAL_POS = 0.60;
-    private static final double BUCKET_GOAL_POS = 0.38;
+    private static final double WRIST_GOAL_POS = 0.54;
+    private static final double BUCKET_GOAL_POS = 0.16;
 
     MotorPath downPath;
 
     @Override
     public void onStart() {
 
-        downPath = MotorPath.runToPosition(RobotComponents.tower_motor, -120, 0.6);
+        downPath = MotorPath.runToPosition(RobotComponents.tower_motor, -240, 0.55);
 
-        RobotComponents.coroutines.runLater(() -> {
-            RobotComponents.wrist_servo.setPosition(0.52);
-            RobotComponents.bucket_servo.setPosition(0.21);
-        }, 50);
 
-        RobotComponents.coroutines.startRoutineLater((mode, d) -> {
-            finish();
-            return CoroutineResult.Stop;
-        }, 120);
     }
 
         ;
 
+    private boolean ranServosYet = false;
 
     @Override
     public void onTick(OpMode opMode) {
+        if (!ranServosYet && downPath.isComplete(10)) {
+            ranServosYet = true;
 
+            RobotComponents.wrist_servo.setPosition(WRIST_GOAL_POS);
+            RobotComponents.bucket_servo.setPosition(BUCKET_GOAL_POS);
+
+            RobotComponents.coroutines.startRoutineLater((mode, d) -> {
+                finish();
+                return CoroutineResult.Stop;
+            }, 130);
+        }
     }
 
 

@@ -159,6 +159,8 @@ public class PoseFinder extends OpMode {
     double currentServoPos = 0;
     double servoSpeedMultiplier = 1;
 
+    double lastServoPos = 0;
+
     // increment: amount it changes each time
     // loopspace : number of ticks in position between each increment
     private static final double SERVO_SPEED_INCREMENT = 0.02;
@@ -191,7 +193,10 @@ public class PoseFinder extends OpMode {
 
         currentServoPos = RMath.clamp(currentServoPos, 0, 1);
 
-        currentServo.servo.setPosition(currentServoPos);
+        if (currentServoPos != lastServoPos) {
+            currentServo.servo.setPosition(currentServoPos);
+            lastServoPos = currentServoPos;
+        }
 
         telemetry.addData("Servo target position is ", currentServoPos);
         telemetry.addData("Position increment multiplier: ", servoSpeedMultiplier + "x");
@@ -223,6 +228,8 @@ public class PoseFinder extends OpMode {
         //currentServoPos = (savedPos == null) ? 0 : savedPos;
 
         currentServoPos = currentServo.servo.getPosition();
+
+        lastServoPos = currentServoPos;
     }
 
 

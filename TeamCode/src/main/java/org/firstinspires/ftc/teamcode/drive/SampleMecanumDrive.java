@@ -87,6 +87,10 @@ public class SampleMecanumDrive extends MecanumDrive {
     private BHI260IMU imu;
     private VoltageSensor batteryVoltageSensor;
 
+    private float[] wheelMultipliers = new float[] {
+            1f, 1f, 1f, 1f
+    };
+
     public SampleMecanumDrive(HardwareMap hardwareMap) {
         super(kV, kA, kStatic, TRACK_WIDTH, TRACK_WIDTH, LATERAL_MULTIPLIER);
 
@@ -310,10 +314,14 @@ public class SampleMecanumDrive extends MecanumDrive {
 
     @Override
     public void setMotorPowers(double v, double v1, double v2, double v3) {
-        front_left.setPower(v);
-        back_left.setPower(v1);
-        back_right.setPower(v2);
-        front_right.setPower(v3);
+        front_left.setPower(v * wheelMultipliers[0]);
+        back_left.setPower(v1 * wheelMultipliers[2]);
+        back_right.setPower(v2 * wheelMultipliers[3]);
+        front_right.setPower(v3 * wheelMultipliers[1]);
+    }
+
+    public void setWheelMultipliers(float[] mults) {
+        wheelMultipliers = mults;
     }
 
     //TODO check

@@ -14,6 +14,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.components.RobotComponents;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.excutil.Input;
+import org.firstinspires.ftc.teamcode.excutil.MotorPath;
 import org.firstinspires.ftc.teamcode.excutil.RMath;
 import org.firstinspires.ftc.teamcode.macros.Flag;
 import org.firstinspires.ftc.teamcode.macros.MacroSequence;
@@ -43,17 +44,22 @@ public class CompDrive extends OpMode {
 
     private static final double PIXEL_RELEASE_POSITION = 0.5;
     private static final double PIXEL_HOLD_POSITION = 1.0;
-    private static final double CLIMBER_HOLD_POSITION = 1.0;
-    private static final double CLIMBER_RELEASE_POSITION = 0.6 ;
+    private static final double CLIMBER_HOLD_POSITION = 0.87;
+    private static final double CLIMBER_RELEASE_POSITION = 0.55;
 
 
     @Override
     public void start() {
-        if (Math.random() < 0.12)
-            if (Math.random() < 0.8)
+        if (Math.random() < 0.2)
+            if (Math.random() < 0.5) {
                 telemetry.speak("Beep boop beep boop... I am a robot.");
-            else
-                telemetry.speak("File the intake again.");
+            } else {
+                if (Math.random() < 0.5) {
+                    telemetry.speak("What's up, Doc");
+                } else {
+                    telemetry.speak("File the intake again.");
+                }
+            }
 
         setUIColor(Color.GRAY);
 
@@ -156,10 +162,19 @@ public class CompDrive extends OpMode {
         }
     }
 
+    boolean initializedClimb = false;
+
     public void pollClimbInputs(){
-        if (gamepad1.y) {
+        if (!initializedClimb) {
+            telemetry.addData("PRESS BACK + Y TO INIT CLIMB", "");
+        } else {
+            telemetry.addData("HOLD Y TO CLIMB", "");
+        }
+        if ((gamepad1.back || initializedClimb) && gamepad1.y) {
             RobotComponents.climb_motor.setPower(1);
             RobotComponents.climber_clasp_servo.setPosition(CLIMBER_RELEASE_POSITION);
+
+            initializedClimb = true;
 
         }
         else {
@@ -198,26 +213,46 @@ public class CompDrive extends OpMode {
     public void pollTowerInputs() {
         if ((input.right_trigger.down() || input.left_trigger.down())&& !MacroSequence.isRunning()) {
 
-            if (input.right_trigger.down()) {
+            if (input.left_trigger.down()) {
+                if (isArmUp == false) {
+                    return;
+                }
                 MacroSequence.begin(
                         "Lower and Tuck Sequence",
                         new LowerArmMacro(),
                         new TuckWristDownMacro(),
                         new IntakePoseMacro(),
-                        new RunActionMacro((o) -> isArmUp = false)
+                        new RunActionMacro((o) -> {
+                            isArmUp = false;
+                            MotorPath.runToPosition(RobotComponents.tower_motor, 0, 0.2);
+                            return false;
+                        })
                 );
 
             } else {
-                if (input.left_trigger.down()) {
+                if (input.right_trigger.down()) {
+                    if (isArmUp == true) {
+                        ArmToDumpPointMacro.TUNED_ARM_POS -= 25;
+                        if (ArmToDumpPointMacro.TUNED_ARM_POS < (ArmToDumpPointMacro.DEFAULT_TUNED_ARM_POS - 250)) {
+                            ArmToDumpPointMacro.TUNED_ARM_POS = ArmToDumpPointMacro.DEFAULT_TUNED_ARM_POS;
+                        }
+                        ArmToDumpPointMacro.runToTunedArmPos(0.6);
+                        return;
+                    }
                     MacroSequence.begin(
                             "Lift And Dump Sequence",
-                            new IntakePoseMacro(),
+                            //new IntakePoseMacro(),
                             new TuckWristForRiseMacro(),
                             new ArmToDumpPointMacro(),
-                            new DumpBucketMacro(),
+                            //new DumpBucketMacro(),
                             new RunActionMacro((o) -> {
-                                //telemetry.speak("get dunked on");
+                                telemetry.speak("standing by");
                                 isArmUp = true;
+                                //RobotComponents.coroutines.runLater(() -> {
+                                  //  RobotComponents.left_pixel_hold_servo.setPosition(PIXEL_RELEASE_POSITION);
+                                    //RobotComponents.right_pixel_hold_servo.setPosition(PIXEL_RELEASE_POSITION);
+                                //}, 200);
+
                                 return false;
                             })
                     );
@@ -271,7 +306,7 @@ public class CompDrive extends OpMode {
 
         if (input.dpad_down.down()) {
             flipControls = !flipControls;
-            telemetry.speak((flipControls) ? "Reverse, reverse." : "Ahead standard.");
+            telemetry.speak((flipControls) ? "Reverse." : "Normal.");
             if (flipControls)
                 setUIColor(Color.DKGRAY);
             else
@@ -281,15 +316,15 @@ public class CompDrive extends OpMode {
         if (input.dpad_left.down()) {
             if (inputMult == normalInputMult) {
                 inputMult = slowInputMult;
-                telemetry.speak("Slowing down.");
+                telemetry.speak("Slow.");
             }
             else if (inputMult == slowInputMult) {
                 inputMult = preciseInputMult;
-                telemetry.speak("Snail's pace.");
+                telemetry.speak("Crawl.");
             }
             else if (inputMult == preciseInputMult) {
                 inputMult = normalInputMult;
-                telemetry.speak("Speed normalized.");
+                telemetry.speak("Fast.");
             }
         }
 
@@ -301,7 +336,7 @@ public class CompDrive extends OpMode {
                 new Pose2d(
                         -DriveTest_2.deadZone(-gamepad1.left_stick_y) * ((flipControls) ? -1 : 1), // swapped 1 & 2
                         DriveTest_2.deadZone(gamepad1.left_stick_x) * ((flipControls) ? -1 : 1),
-                        -DriveTest_2.deadZone(-gamepad1.right_stick_x) * ((flipControls) ? -1 : 1)
+                        -DriveTest_2.deadZone(-gamepad1.right_stick_x)// * ((flipControls) ? -1 : 1)
                 ).times(inputMult)
         );
 

@@ -30,9 +30,38 @@ public class WheelDebugger extends LinearOpMode {
         waitForStart();
         float force = 0.3f;
 
+        /*
+        0 - front left
+        1 - front right
+        2 - back left
+        3 - back right
+         */
+        float[] wheelMultipliers = new float[] {
+                1f, 1f, 1f, 1f
+        };
+
+        int targetedWheelToModify = -1;
+
         while (!isStopRequested()) {
 
             input.pollGamepad(gamepad1);
+
+            int newTarget = -999;
+            if (input.dpad_up.down()) {
+                newTarget = 0;
+            } else if (input.dpad_right.down()) {
+                newTarget = 1;
+            } else if (input.dpad_left.down()) {
+                newTarget = 2;
+            } else if (input.dpad_down.down()) {
+                newTarget = 3;
+            }
+
+            if (targetedWheelToModify == newTarget) {
+                targetedWheelToModify = -1;
+            } else if (newTarget != -999) {
+                targetedWheelToModify = newTarget;
+            }
 
             if (input.right_trigger.down()) {
                 force = 0.3f;
@@ -42,6 +71,20 @@ public class WheelDebugger extends LinearOpMode {
             }
 
             if (!debugOn.yes()) {
+
+                if (targetedWheelToModify != -1) {
+                    if (input.y.down()) {
+                        wheelMultipliers[targetedWheelToModify] += 0.04;
+                    } else if (input.a.down()) {
+                        wheelMultipliers[targetedWheelToModify] -= 0.04;
+                    }
+                }
+
+                drive.setWheelMultipliers(wheelMultipliers);
+
+                telemetry.addData("Mults:", "FL: " + wheelMultipliers[0] + ", RL: " + wheelMultipliers[1] + ", BL: " + wheelMultipliers[2] + ", BR: " + wheelMultipliers[3]);
+
+
                 drive.setWeightedDrivePower(
                         new Pose2d(
                                 -DriveTest_2.deadZone(-gamepad1.left_stick_y), // swapped 1 & 2

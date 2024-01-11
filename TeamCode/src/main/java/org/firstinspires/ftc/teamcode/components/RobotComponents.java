@@ -95,18 +95,28 @@ public class RobotComponents {
         perpendicularEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "back_left"));
 
         wrist_servo = registerServo(hardwareMap, "wrist_servo", "Wrist Servo");
-        bucket_servo = registerServo(hardwareMap, "bucket_servo", "Bucket Servo");
+        bucket_servo = registerServo(hardwareMap, "bucket_servo", "Bucket Tilt Servo");
 
-        climber_clasp_servo = hardwareMap.get(Servo.class, "climber_clasp");
+        climber_clasp_servo = registerServo(hardwareMap, "climber_clasp", "Climber Clasp Servo");
 
         back_intake_servo = hardwareMap.get(CRServo.class, "back_intake_servo");
 
-        left_pixel_hold_servo = hardwareMap.get(Servo.class, "bucket_left");
-        right_pixel_hold_servo = hardwareMap.get(Servo.class, "bucket_right");
+        left_pixel_hold_servo = registerServo(hardwareMap, "bucket_left", "Left Pixel Hold Servo");
+        right_pixel_hold_servo = registerServo(hardwareMap, "bucket_right", "Right Pixel Hold Servo");
     }
 
     public static void tickSystems(OpMode activeMode) {
         coroutines.tick(activeMode);
         MacroSequence.tick(activeMode);
+    }
+
+    public static final double     COUNTS_PER_ENCODER_REV    = 8192 ;    // eg: TETRIX Motor Encoder
+    public static final double     ENCODER_GEAR_REDUCTION    = 1.0 ;     // No External Gearing.
+    public static final double     WHEEL_DIAMETER_INCHES   = 2.0 ;     // For figuring circumference
+    public static final double     ENCODER_COUNTS_PER_INCH         = (COUNTS_PER_ENCODER_REV * ENCODER_GEAR_REDUCTION) /
+                                                                (WHEEL_DIAMETER_INCHES * 3.1415);
+
+    public static int encoderDistance(double inches) {
+        return (int) (inches * ENCODER_COUNTS_PER_INCH);
     }
 }
