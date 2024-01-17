@@ -29,7 +29,7 @@ public class LowerArmMacro extends PathStep {
 
     @Override
     public void onTick(OpMode opMode) {
-        if (!ranServosYet && downPath.isComplete(10)) {
+        if (!ranServosYet && downPath.isComplete(25, 1000)) {
             ranServosYet = true;
 
             RobotComponents.wrist_servo.setPosition(WRIST_GOAL_POS);

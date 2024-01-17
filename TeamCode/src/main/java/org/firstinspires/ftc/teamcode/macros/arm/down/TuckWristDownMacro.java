@@ -33,7 +33,7 @@ public class TuckWristDownMacro extends PathStep {
 
     @Override
     public void onTick(OpMode opMode) {
-        if (!ranServosYet && downPath.isComplete(5)) {
+        if (!ranServosYet && downPath.isComplete(15, 1000)) {
             ranServosYet = true;
 
             RobotComponents.coroutines.runLater(() -> {

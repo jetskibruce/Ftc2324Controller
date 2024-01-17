@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.macros.arm;
 
+import static org.firstinspires.ftc.teamcode.opmodes.teleop.functional.CompDrive.PIXEL_RELEASE_POSITION;
+
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.excutil.MotorPath;
@@ -22,6 +24,8 @@ public class IntakePoseMacro extends PathStep {
         finishUp = MotorPath.runToPosition(RobotComponents.tower_motor, -40, 0.4);
 
         RobotComponents.coroutines.runLater(() -> {
+            RobotComponents.left_pixel_hold_servo.setPosition(PIXEL_RELEASE_POSITION);
+            RobotComponents.right_pixel_hold_servo.setPosition(PIXEL_RELEASE_POSITION);
             RobotComponents.wrist_servo.setPosition(WRIST_GOAL_POS);
             RobotComponents.bucket_servo.setPosition(BUCKET_GOAL_POS);
         }, 20);

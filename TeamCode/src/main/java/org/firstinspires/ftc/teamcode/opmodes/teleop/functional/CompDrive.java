@@ -11,6 +11,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.robot.Robot;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.components.RobotComponents;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.excutil.Input;
@@ -25,8 +27,13 @@ import org.firstinspires.ftc.teamcode.macros.arm.up.ArmToDumpPointMacro;
 import org.firstinspires.ftc.teamcode.macros.arm.up.DumpBucketMacro;
 import org.firstinspires.ftc.teamcode.macros.arm.up.TuckWristForRiseMacro;
 import org.firstinspires.ftc.teamcode.macros.generic.RunActionMacro;
+import org.firstinspires.ftc.teamcode.macros.tuckdown.ArbitraryDelayMacro;
 
-@TeleOp(group = "drive", name = "Competition Drive")
+import java.util.function.Supplier;
+
+import javax.crypto.Mac;
+
+@TeleOp(group = "aCompete", name = "Competition Drive")
 public class CompDrive extends OpMode {
 
     View androidUI;
@@ -42,10 +49,30 @@ public class CompDrive extends OpMode {
 
     private boolean isArmUp = false;  // Use initializers
 
-    private static final double PIXEL_RELEASE_POSITION = 0.5;
-    private static final double PIXEL_HOLD_POSITION = 1.0;
+    public static final double PIXEL_RELEASE_POSITION = 0.5;
+    public static final double PIXEL_HOLD_POSITION = 1.0;
     private static final double CLIMBER_HOLD_POSITION = 0.87;
-    private static final double CLIMBER_RELEASE_POSITION = 0.55;
+    private static final double CLIMBER_RELEASE_POSITION = 0.623;
+
+    private static final double LAUNCH_HOLD_POSITION = 0.555;
+    private static final double LAUNCH_RELEASE_POSITION = 0.2128;
+
+    public static final Supplier<MacroSequence> TOWER_UP_SEQUENCE =
+            () -> MacroSequence.compose(
+                "Lift And Dump Sequence",
+                //new IntakePoseMacro(),
+                new TuckWristForRiseMacro(),
+                new ArmToDumpPointMacro()
+                //new DumpBucketMacro(),
+            );
+
+    public static final Supplier<MacroSequence> TOWER_DOWN_SEQUENCE =
+            () -> MacroSequence.compose(
+                "Lower and Tuck Sequence",
+                new LowerArmMacro(),
+                new TuckWristDownMacro(),
+                new IntakePoseMacro()
+            );
 
 
     @Override
@@ -70,6 +97,8 @@ public class CompDrive extends OpMode {
     @Override
     public void init() {
 
+        telemetry.speak("Arm the drone again");
+
         drive = new SampleMecanumDrive(hardwareMap);
 
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -85,6 +114,8 @@ public class CompDrive extends OpMode {
         RobotComponents.climber_clasp_servo.setPosition(CLIMBER_HOLD_POSITION);
         // RE_ENABLE BEFORE POSES
         //MacroSequence.compose("Init Intake Macro", new IntakePoseMacro()).start();
+
+        RobotComponents.launch_servo.setPosition(LAUNCH_HOLD_POSITION);
 
         intakeOn.toggle();
 
@@ -146,6 +177,16 @@ public class CompDrive extends OpMode {
 
        // telemetry.addData("climb pos ", RobotComponents.climb_motor.getCurrentPosition());
 
+        YawPitchRollAngles orientation = RobotComponents.imu.getRobotYawPitchRollAngles();
+
+        telemetry.addData("Orientation: ",
+                "H (Zrot): " + orientation.getYaw(AngleUnit.DEGREES));
+                        //", P (Xrot): " + orientation.getPitch(AngleUnit.DEGREES) +
+                        //", R (Yrot): " + orientation.getRoll(AngleUnit.DEGREES));
+
+        //MacroSequence.setTimeoutMs(100_000_000);
+        MacroSequence.appendDebugTo(telemetry);
+
         telemetry.update();
 
     }
@@ -170,9 +211,16 @@ public class CompDrive extends OpMode {
         } else {
             telemetry.addData("HOLD Y TO CLIMB", "");
         }
+
+        if (gamepad1.back && input.x.down()) {
+            RobotComponents.launch_servo.setPosition(LAUNCH_RELEASE_POSITION);
+        }
+
+
         if ((gamepad1.back || initializedClimb) && gamepad1.y) {
             RobotComponents.climb_motor.setPower(1);
             RobotComponents.climber_clasp_servo.setPosition(CLIMBER_RELEASE_POSITION);
+
 
             initializedClimb = true;
 
@@ -217,17 +265,14 @@ public class CompDrive extends OpMode {
                 if (isArmUp == false) {
                     return;
                 }
-                MacroSequence.begin(
-                        "Lower and Tuck Sequence",
-                        new LowerArmMacro(),
-                        new TuckWristDownMacro(),
-                        new IntakePoseMacro(),
+
+                TOWER_DOWN_SEQUENCE.get().append(
                         new RunActionMacro((o) -> {
                             isArmUp = false;
                             MotorPath.runToPosition(RobotComponents.tower_motor, 0, 0.2);
                             return false;
                         })
-                );
+                ).start();
 
             } else {
                 if (input.right_trigger.down()) {
@@ -239,23 +284,13 @@ public class CompDrive extends OpMode {
                         ArmToDumpPointMacro.runToTunedArmPos(0.6);
                         return;
                     }
-                    MacroSequence.begin(
-                            "Lift And Dump Sequence",
-                            //new IntakePoseMacro(),
-                            new TuckWristForRiseMacro(),
-                            new ArmToDumpPointMacro(),
-                            //new DumpBucketMacro(),
+                    TOWER_UP_SEQUENCE.get().append(
                             new RunActionMacro((o) -> {
                                 telemetry.speak("standing by");
                                 isArmUp = true;
-                                //RobotComponents.coroutines.runLater(() -> {
-                                  //  RobotComponents.left_pixel_hold_servo.setPosition(PIXEL_RELEASE_POSITION);
-                                    //RobotComponents.right_pixel_hold_servo.setPosition(PIXEL_RELEASE_POSITION);
-                                //}, 200);
-
                                 return false;
                             })
-                    );
+                    ).start();
                 }
             }
         }
@@ -263,14 +298,16 @@ public class CompDrive extends OpMode {
 
     int direction = -999;
 
-    double speedMult = 0.66f;
+    double speedMult = 1f;
 
     public void pollIntakeInputs() {
         int newDir = -999;
-        if (input.left_bumper.down()) {
+        if (input.left_bumper.held()) {
             newDir = intakeIn;
-        } else if (input.right_bumper.down()) {
+        } else if (input.right_bumper.held()) {
             newDir = intakeOut;
+        } else {
+            newDir = direction;
         }
 
         //if (input.x.down()) speedMult -= 0.02;
@@ -326,6 +363,16 @@ public class CompDrive extends OpMode {
                 inputMult = normalInputMult;
                 telemetry.speak("Fast.");
             }
+        }
+
+        if (input.dpad_up.down() && !MacroSequence.isRunning()) {
+            MacroSequence.begin("Fix Bucket Pos",
+                    new TuckWristForRiseMacro(),
+                    new ArmToDumpPointMacro().limitToJustUp(),
+                    new ArbitraryDelayMacro(100),
+                    new TuckWristDownMacro(),
+                    new IntakePoseMacro()
+            );
         }
 
 

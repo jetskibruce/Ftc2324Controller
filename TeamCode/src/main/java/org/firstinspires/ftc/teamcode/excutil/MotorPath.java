@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.excutil;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class MotorPath {
 
@@ -13,10 +14,17 @@ public class MotorPath {
 
     private DcMotor motor;
     private int goalTicks;
+    private ElapsedTime time = new ElapsedTime();
 
     private MotorPath(DcMotor motor, int goalTicks) {
         this.motor = motor;
         this.goalTicks = goalTicks;
+    }
+
+    public boolean isComplete(int threshold, double msThreshold) {
+        if (time.milliseconds() > msThreshold) return true;
+
+        return isComplete(threshold);
     }
 
     public boolean isComplete(int threshold) {

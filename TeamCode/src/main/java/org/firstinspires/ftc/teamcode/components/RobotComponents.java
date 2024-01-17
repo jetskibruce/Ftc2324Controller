@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.components;
 
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.excutil.coroutines.CoroutineManager;
@@ -36,6 +38,13 @@ public class RobotComponents {
         }
     }
 
+    public static IMU.Parameters imuParams = new IMU.Parameters(
+            new RevHubOrientationOnRobot(
+                    RevHubOrientationOnRobot.LogoFacingDirection.LEFT,
+                    RevHubOrientationOnRobot.UsbFacingDirection.UP
+            )
+    );
+
     public static DcMotorEx front_left = null;
     public static DcMotorEx front_right = null;
     public static DcMotorEx back_left = null;
@@ -53,6 +62,10 @@ public class RobotComponents {
 
     public static CRServo back_intake_servo;
     public static Servo climber_clasp_servo;
+
+    public static Servo launch_servo;
+
+    public static IMU imu;
 
     public static Encoder parallelEncoder, perpendicularEncoder;
 
@@ -79,6 +92,13 @@ public class RobotComponents {
     }
 
     public static void init(HardwareMap hardwareMap) {
+        MacroSequence.reset();
+
+        imu = hardwareMap.get(IMU.class, "imu");
+
+        imu.initialize(imuParams);
+
+
         front_left = hardwareMap.get(DcMotorEx.class, "front_left");
         front_right = hardwareMap.get(DcMotorEx.class, "front_right");
         back_left = hardwareMap.get(DcMotorEx.class, "back_left");
@@ -89,6 +109,7 @@ public class RobotComponents {
         tower_motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         //climb_motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        tower_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         front_intake_motor = hardwareMap.get(DcMotor.class, "front_intake_motor");
 
         parallelEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "back_right"));
@@ -98,6 +119,8 @@ public class RobotComponents {
         bucket_servo = registerServo(hardwareMap, "bucket_servo", "Bucket Tilt Servo");
 
         climber_clasp_servo = registerServo(hardwareMap, "climber_clasp", "Climber Clasp Servo");
+
+        launch_servo = registerServo(hardwareMap, "launch_servo", "Drone Launch Servo");
 
         back_intake_servo = hardwareMap.get(CRServo.class, "back_intake_servo");
 

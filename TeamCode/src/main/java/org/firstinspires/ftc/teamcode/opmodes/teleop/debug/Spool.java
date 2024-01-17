@@ -25,7 +25,7 @@ import org.firstinspires.ftc.teamcode.macros.arm.up.TuckWristForRiseMacro;
 import org.firstinspires.ftc.teamcode.macros.generic.RunActionMacro;
 import org.firstinspires.ftc.teamcode.opmodes.teleop.functional.DriveTest_2;
 
-@TeleOp(group = "drive", name = "Spool Control")
+@TeleOp(group = "bControl", name = "Spool Control")
 public class Spool extends OpMode {
 
     private Input input;

@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
-@TeleOp(group = "drivez")
+@TeleOp(name = "Pose Finder", group = "zDebug")
 public class PoseFinder extends OpMode {
 
     private enum PoseMode {

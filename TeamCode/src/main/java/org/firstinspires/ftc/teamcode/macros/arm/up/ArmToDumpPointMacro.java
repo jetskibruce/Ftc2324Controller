@@ -17,23 +17,48 @@ public class ArmToDumpPointMacro extends PathStep {
 
     MotorPath upPath;
 
+    private boolean justUpFix = false;
+
+    public ArmToDumpPointMacro limitToJustUp() {
+        justUpFix = true;
+        return this;
+    }
+
     @Override
     public void onStart() {
 
         //RobotComponents.bucket_servo.setPosition(BUCKET_GOAL_POS);
 
-        upPath = runToTunedArmPos(0.6);
+        if (justUpFix) {
+            upPath = runToPartArmPos(0.6, 0.5);
+        } else {
+            upPath = runToTunedArmPos(0.6);
+        }
+
+    }
+
+    public static MotorPath runToPartArmPos(double power, double amt) {
+        return MotorPath.runToPosition(RobotComponents.tower_motor, (int)(TUNED_ARM_POS * amt), power);
     }
 
     public static MotorPath runToTunedArmPos(double power) {
-        return MotorPath.runToPosition(RobotComponents.tower_motor, -1105, power);
+        return runToPartArmPos(power, 1.0);
     }
 
     private boolean ranServosYet = false;
 
     @Override
     public void onTick(OpMode opMode) {
-        if (!ranServosYet && upPath.isComplete(10)) {
+
+        if (!ranServosYet && upPath.isComplete(50, 1000)) {
+
+
+            if (justUpFix) {
+                finish();
+                return;
+            }
+
+            opMode.telemetry.addData("TOLD TOLD TOLD TOLD", "");
             ranServosYet = true;
 
                 RobotComponents.bucket_servo.setPosition(BUCKET_GOAL_POS);
@@ -44,6 +69,8 @@ public class ArmToDumpPointMacro extends PathStep {
                     return CoroutineResult.Stop;
                 }, 200);
 
+        } else {
+            opMode.telemetry.addData("have not told servos to move", "");
         }
     }
 

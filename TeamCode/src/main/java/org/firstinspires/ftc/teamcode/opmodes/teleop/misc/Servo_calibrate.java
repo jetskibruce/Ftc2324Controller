@@ -1,9 +1,11 @@
 package org.firstinspires.ftc.teamcode.opmodes.teleop.misc;
 
-        import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-        import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-        import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.Servo;
 
+@Disabled
 @TeleOp(name="Servo_calibrate", group="Iterative Opmode")
 public class Servo_calibrate extends OpMode {
 

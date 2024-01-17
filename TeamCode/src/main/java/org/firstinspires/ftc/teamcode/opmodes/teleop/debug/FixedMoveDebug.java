@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.excutil.Input;
 import org.firstinspires.ftc.teamcode.macros.MacroSequence;
 import org.firstinspires.ftc.teamcode.macros.generic.DriveToTickOffset;
 
-@TeleOp(group = "debug", name = "Fixed Move Testing")
+@TeleOp(group = "zDebug", name = "Fixed Move Testing")
 public class FixedMoveDebug extends OpMode {
 
     static final double     COUNTS_PER_ENCODER_REV    = 8192 ;    // eg: TETRIX Motor Encoder

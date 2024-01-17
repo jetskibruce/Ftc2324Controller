@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.macros.Flag;
 import org.firstinspires.ftc.teamcode.opmodes.teleop.functional.DriveTest_2;
 
 
-@TeleOp(group = "debug")
+@TeleOp(name = "Wheel Debugger", group="zDebug")
 public class WheelDebugger extends LinearOpMode {
 
     Flag debugOn = new Flag();

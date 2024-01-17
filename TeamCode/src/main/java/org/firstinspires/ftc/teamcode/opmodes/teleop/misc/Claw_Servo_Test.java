@@ -2,6 +2,7 @@
 package org.firstinspires.ftc.teamcode.opmodes.teleop.misc;
 
 //import com.outoftheboxrobotics.photoncore.PhotonCore;
+        import com.qualcomm.robotcore.eventloop.opmode.Disabled;
         import com.qualcomm.robotcore.eventloop.opmode.OpMode;
         import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
         import com.qualcomm.robotcore.hardware.CRServo;
@@ -11,7 +12,7 @@ package org.firstinspires.ftc.teamcode.opmodes.teleop.misc;
 
 
 
-
+@Disabled
 @TeleOp(name="Claw_Servo_Test")
 public class Claw_Servo_Test extends OpMode {
     private DcMotor front_left  = null;

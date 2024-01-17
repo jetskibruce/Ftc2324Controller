@@ -5,6 +5,11 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class MacroSequence {
 
     private static ElapsedTime executionTime = new ElapsedTime();
@@ -24,6 +29,13 @@ public class MacroSequence {
         executingMacro.start();
         RunningMacro = true;
         executionTime.reset();
+    }
+
+    public static void reset() {
+        executionTime = new ElapsedTime();
+        executingMacro = null;
+        TIMEOUT_MS = 5000;
+        RunningMacro = false;
     }
 
     public static void stopActiveMacro() {
@@ -70,7 +82,7 @@ public class MacroSequence {
 
     }
 
-    private PathStep[] steps;
+    private List<PathStep> steps = new ArrayList<>();
     private int stepIndex = -1;
     public boolean Finished = false;
 
@@ -78,18 +90,19 @@ public class MacroSequence {
 
     public MacroSequence(String label, PathStep[] steps) {
         this.label = label;
-        this.steps = steps;
+        this.steps.addAll(Arrays.asList(steps));
+
     }
 
     public void runNext() {
         if (Finished) throw new RuntimeException("Tried to run the next sequence step on a stopped sequence!");
         stepIndex++;
-        if (stepIndex >= steps.length) {
+        if (stepIndex >= steps.size()) {
             stop();
             return;
         }
-        steps[stepIndex].setHostPath(this);
-        MacroSequence.run(steps[stepIndex]);
+        steps.get(stepIndex).setHostPath(this);
+        MacroSequence.run(steps.get(stepIndex));
     }
 
     public void stop() {
@@ -100,7 +113,18 @@ public class MacroSequence {
 
     public void start() {
         stepIndex = -1;
+        Finished = false;
         runNext();
+    }
+
+    public MacroSequence prepend(PathStep... newSteps) {
+        this.steps.addAll(0, Arrays.asList(newSteps));
+        return this;
+    }
+
+    public MacroSequence append(PathStep... newSteps) {
+        this.steps.addAll(Arrays.asList(newSteps));
+        return this;
     }
 
     public String getLabel() {
@@ -112,7 +136,7 @@ public class MacroSequence {
     }
 
     public int getNumSteps() {
-        return steps.length;
+        return steps.size();
     }
 
 }

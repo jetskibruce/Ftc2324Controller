@@ -2,6 +2,7 @@
 package org.firstinspires.ftc.teamcode.opmodes.teleop.misc;
 
 //import com.outoftheboxrobotics.photoncore.PhotonCore;
+        import com.qualcomm.robotcore.eventloop.opmode.Disabled;
         import com.qualcomm.robotcore.eventloop.opmode.OpMode;
         import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
         import com.qualcomm.robotcore.hardware.CRServo;
@@ -11,6 +12,7 @@ package org.firstinspires.ftc.teamcode.opmodes.teleop.misc;
 
         import org.firstinspires.ftc.teamcode.excutil.Input;
 
+@Disabled
 @TeleOp(name="IntakeTest_1")
 public class IntakeTest_1 extends OpMode {
 
