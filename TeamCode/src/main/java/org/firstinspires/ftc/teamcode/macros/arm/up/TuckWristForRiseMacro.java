@@ -7,6 +7,7 @@ import org.firstinspires.ftc.teamcode.excutil.MotorPath;
 import org.firstinspires.ftc.teamcode.excutil.coroutines.CoroutineResult;
 import org.firstinspires.ftc.teamcode.macros.PathStep;
 import org.firstinspires.ftc.teamcode.components.RobotComponents;
+import org.firstinspires.ftc.teamcode.opmodes.teleop.functional.CompDrive;
 
 public class TuckWristForRiseMacro extends PathStep {
 
@@ -43,6 +44,8 @@ public class TuckWristForRiseMacro extends PathStep {
 
                 RobotComponents.coroutines.runLater(() -> {
                     RobotComponents.bucket_servo.setPosition(BUCKET_GOAL_POS);
+
+                    RobotComponents.extendo_servo.setPosition(CompDrive.ARM_RETRACT_POSITION);
                 }, 80);
             }, 80);
 

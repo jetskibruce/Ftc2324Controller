@@ -16,6 +16,7 @@ import org.firstinspires.ftc.teamcode.macros.arm.IntakePoseMacro;
 import org.firstinspires.ftc.teamcode.macros.auto.AutoCorrectHeadingDumb;
 import org.firstinspires.ftc.teamcode.macros.auto.AutoMoveMacro;
 import org.firstinspires.ftc.teamcode.macros.auto.AutoOuttakePoseMacro;
+import org.firstinspires.ftc.teamcode.macros.generic.AwaitConditionMacro;
 import org.firstinspires.ftc.teamcode.macros.generic.RunActionMacro;
 import org.firstinspires.ftc.teamcode.macros.generic.RunExtraMacro;
 import org.firstinspires.ftc.teamcode.macros.tuckdown.ArbitraryDelayMacro;
@@ -46,7 +47,7 @@ public class CompAuto extends OpMode {
     @Override
     public void start() {
 
-        ///MacroSequence.setTimeoutMs(90_000);
+        //MacroSequence.setTimeoutMs(90_000);
 
         //telemetry.speak("Auto robot oh. Auto! Auto!");
 

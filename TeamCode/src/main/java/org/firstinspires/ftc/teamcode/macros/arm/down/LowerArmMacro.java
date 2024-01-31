@@ -6,6 +6,7 @@ import org.firstinspires.ftc.teamcode.excutil.MotorPath;
 import org.firstinspires.ftc.teamcode.excutil.coroutines.CoroutineResult;
 import org.firstinspires.ftc.teamcode.macros.PathStep;
 import org.firstinspires.ftc.teamcode.components.RobotComponents;
+import org.firstinspires.ftc.teamcode.opmodes.teleop.functional.CompDrive;
 
 public class LowerArmMacro extends PathStep {
 
@@ -18,6 +19,7 @@ public class LowerArmMacro extends PathStep {
     @Override
     public void onStart() {
 
+        RobotComponents.extendo_servo.setPosition(CompDrive.ARM_RETRACT_POSITION);
         downPath = MotorPath.runToPosition(RobotComponents.tower_motor, -240, 0.55);
 
 

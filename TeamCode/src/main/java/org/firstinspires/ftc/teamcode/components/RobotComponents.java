@@ -64,6 +64,7 @@ public class RobotComponents {
     public static Servo climber_clasp_servo;
 
     public static Servo launch_servo;
+    public static Servo extendo_servo;
 
     public static IMU imu;
 
@@ -121,6 +122,8 @@ public class RobotComponents {
         climber_clasp_servo = registerServo(hardwareMap, "climber_clasp", "Climber Clasp Servo");
 
         launch_servo = registerServo(hardwareMap, "launch_servo", "Drone Launch Servo");
+
+        extendo_servo = registerServo(hardwareMap, "extendo_servo", "Arm Extension Servo");
 
         back_intake_servo = hardwareMap.get(CRServo.class, "back_intake_servo");
 

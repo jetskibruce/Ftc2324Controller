@@ -48,7 +48,7 @@ public class MacroSequence {
                 executingMacro.onTick(opMode);
             }
             // force executing path step to stop if it exceeds TIMEOUT_MS
-            if (executionTime.milliseconds() > TIMEOUT_MS) {
+            if (executingMacro.canTimeout() && executionTime.milliseconds() > TIMEOUT_MS) {
                 executingMacro.finish();
             }
         }

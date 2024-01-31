@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.macros;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
+import java.util.function.Predicate;
+
 public abstract class PathStep {
 
     private PathStep nextStep = null;
@@ -35,5 +37,9 @@ public abstract class PathStep {
     }
 
     public abstract void onTick(OpMode opMode);
+
+    public boolean canTimeout() {
+        return true;
+    }
 
 }

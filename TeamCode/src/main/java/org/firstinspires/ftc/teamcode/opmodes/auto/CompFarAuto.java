@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.macros.arm.autodump.AutoDumpPointMacro;
 import org.firstinspires.ftc.teamcode.macros.arm.up.TuckWristForRiseMacro;
 import org.firstinspires.ftc.teamcode.macros.auto.AutoCorrectHeadingDumb;
 import org.firstinspires.ftc.teamcode.macros.auto.AutoMoveMacro;
+import org.firstinspires.ftc.teamcode.macros.generic.AwaitConditionMacro;
 import org.firstinspires.ftc.teamcode.macros.generic.RunActionMacro;
 import org.firstinspires.ftc.teamcode.macros.tuckdown.ArbitraryDelayMacro;
 import org.firstinspires.ftc.teamcode.opmodes.NerdOpMode;

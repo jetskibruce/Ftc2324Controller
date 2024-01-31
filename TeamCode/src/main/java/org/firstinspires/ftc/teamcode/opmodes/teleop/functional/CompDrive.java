@@ -18,6 +18,8 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.excutil.Input;
 import org.firstinspires.ftc.teamcode.excutil.MotorPath;
 import org.firstinspires.ftc.teamcode.excutil.RMath;
+import org.firstinspires.ftc.teamcode.excutil.coroutines.CoroutineAction;
+import org.firstinspires.ftc.teamcode.excutil.coroutines.CoroutineResult;
 import org.firstinspires.ftc.teamcode.macros.Flag;
 import org.firstinspires.ftc.teamcode.macros.MacroSequence;
 import org.firstinspires.ftc.teamcode.macros.arm.IntakePoseMacro;
@@ -56,6 +58,10 @@ public class CompDrive extends OpMode {
 
     private static final double LAUNCH_HOLD_POSITION = 0.555;
     private static final double LAUNCH_RELEASE_POSITION = 0.2128;
+
+    public static final double ARM_RETRACT_POSITION = 0.59;
+    public static final double ARM_FULL_EXTEND = 0.0;
+    public static final double ARM_HALF_EXTEND = (ARM_RETRACT_POSITION + ARM_FULL_EXTEND) / 2.0;
 
     public static final Supplier<MacroSequence> TOWER_UP_SEQUENCE =
             () -> MacroSequence.compose(
@@ -115,6 +121,8 @@ public class CompDrive extends OpMode {
         // RE_ENABLE BEFORE POSES
         //MacroSequence.compose("Init Intake Macro", new IntakePoseMacro()).start();
 
+        RobotComponents.extendo_servo.setPosition(ARM_RETRACT_POSITION);
+
         RobotComponents.launch_servo.setPosition(LAUNCH_HOLD_POSITION);
 
         intakeOn.toggle();
@@ -147,6 +155,8 @@ public class CompDrive extends OpMode {
     }
 
     Flag intakeOn = new Flag();
+
+
 
     @Override
     public void loop() {
@@ -257,6 +267,37 @@ public class CompDrive extends OpMode {
     int intakeIn = 1;
     int intakeOut = -1;
 
+    int activeExtendoStepIndex = 0;
+
+    public CoroutineAction smallStepExtendo(double current, double goal, int stepCount) {
+
+        double[] steps = new double[stepCount];
+
+        double stepSize = (goal - current) / stepCount;
+
+        if (goal < current) stepSize *= -1;
+
+        for (int i = 0; i < stepCount; i++) {
+            steps[i] = current + (stepSize * i);
+        }
+
+        return (opmode, data) -> {
+
+            // delay between steps
+            if (data.MsAlive < (activeExtendoStepIndex * 40)) return CoroutineResult.Continue;
+
+            if (activeExtendoStepIndex >= stepCount - 1) {
+                return CoroutineResult.Stop;
+            }
+
+            RobotComponents.extendo_servo.setPosition(steps[activeExtendoStepIndex]);
+
+            activeExtendoStepIndex++;
+
+            return CoroutineResult.Continue;
+        };
+    }
+
 
     public void pollTowerInputs() {
         if ((input.right_trigger.down() || input.left_trigger.down())&& !MacroSequence.isRunning()) {
@@ -277,13 +318,38 @@ public class CompDrive extends OpMode {
             } else {
                 if (input.right_trigger.down()) {
                     if (isArmUp == true) {
-                        ArmToDumpPointMacro.TUNED_ARM_POS -= 25;
+                        /*ArmToDumpPointMacro.TUNED_ARM_POS -= 25;
                         if (ArmToDumpPointMacro.TUNED_ARM_POS < (ArmToDumpPointMacro.DEFAULT_TUNED_ARM_POS - 250)) {
                             ArmToDumpPointMacro.TUNED_ARM_POS = ArmToDumpPointMacro.DEFAULT_TUNED_ARM_POS;
                         }
-                        ArmToDumpPointMacro.runToTunedArmPos(0.6);
+                        ArmToDumpPointMacro.runToTunedArmPos(0.6);*/
+
+                        if (RobotComponents.extendo_servo.getPosition() == ARM_FULL_EXTEND) {
+                            /*activeExtendoStepIndex = 0;
+                            RobotComponents.coroutines.startRoutine(smallStepExtendo(
+                                    ARM_FULL_EXTEND, ARM_RETRACT_POSITION,
+                                    10
+                            ));*/
+                            RobotComponents.extendo_servo.setPosition(ARM_RETRACT_POSITION);
+                        } else if (RobotComponents.extendo_servo.getPosition() == ARM_HALF_EXTEND) {
+                            /*activeExtendoStepIndex = 0;
+                            RobotComponents.coroutines.startRoutine(smallStepExtendo(
+                                    ARM_HALF_EXTEND, ARM_FULL_EXTEND,
+                                    10
+                            ));*/
+                            RobotComponents.extendo_servo.setPosition(ARM_FULL_EXTEND);
+                        } else {
+                            /*RobotComponents.coroutines.startRoutine(smallStepExtendo(
+                                    ARM_RETRACT_POSITION, ARM_HALF_EXTEND,
+                                    10
+                            ));*/
+
+                            RobotComponents.extendo_servo.setPosition(ARM_HALF_EXTEND);
+                        }
+
                         return;
                     }
+
                     TOWER_UP_SEQUENCE.get().append(
                             new RunActionMacro((o) -> {
                                 telemetry.speak("standing by");
