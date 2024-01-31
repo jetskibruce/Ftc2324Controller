@@ -11,22 +11,27 @@ import com.qualcomm.robotcore.hardware.Servo;
     public class extendo extends OpMode {
 
     Servo outake_Servo;
-    double extened_pos =0;
-    double closed_pos =.7;
+    boolean isExtened = false;
+    double extened_pos = 0;
+    double closed_pos = .7;
 
     @Override
     public void init() {
-        outake_Servo=hardwareMap.get(Servo.class,"outake_servo");
+        outake_Servo = hardwareMap.get(Servo.class, "outake_servo");
         outake_Servo.setPosition(closed_pos);
     }
 
     @Override
-    public void loop() {if (gamepad1.dpad_right) {
-           outake_Servo.setPosition(extened_pos);
+    public void loop() {
+        if (gamepad1.dpad_right) {
+            if (isExtened) {
+                outake_Servo.setPosition(closed_pos);
+                isExtened = false;
+            } else {
+                outake_Servo.setPosition(extened_pos);
+                isExtened = true;
+            }
+            //arm_Servo.setPosition(extened_pos);
         }
-        else {
-            outake_Servo.setPosition(closed_pos);
-        }
-        //arm_Servo.setPosition(extened_pos);
     }
 }
