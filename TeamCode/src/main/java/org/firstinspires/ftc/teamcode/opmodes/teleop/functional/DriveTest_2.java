@@ -141,8 +141,8 @@ public class DriveTest_2 extends OpMode {
 
 
 
-        double drive = deadZone(gamepad1.left_stick_x);
-        double strafe = deadZone(gamepad1.left_stick_y);
+        double drive = deadZone(gamepad1.left_stick_y);
+        double strafe = deadZone(gamepad1.left_stick_x);
         double twist = deadZone(gamepad1.right_stick_x);
 
         double[] speeds = {
