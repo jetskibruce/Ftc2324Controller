@@ -10,9 +10,9 @@ import org.firstinspires.ftc.teamcode.components.RobotComponents;
 public class ArmToDumpPointMacro extends PathStep {
 
     private static final double WRIST_GOAL_POS = 0.9;
-    private static final double BUCKET_GOAL_POS = 0.43;
+    private static final double BUCKET_GOAL_POS = 0.49;
 
-    public static final int DEFAULT_TUNED_ARM_POS = -1145;
+    public static final int DEFAULT_TUNED_ARM_POS = -1042;
     public static int TUNED_ARM_POS = DEFAULT_TUNED_ARM_POS;
 
     MotorPath upPath;

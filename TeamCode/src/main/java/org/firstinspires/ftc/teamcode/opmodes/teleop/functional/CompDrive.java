@@ -59,7 +59,7 @@ public class CompDrive extends OpMode {
     private static final double LAUNCH_HOLD_POSITION = 0.555;
     private static final double LAUNCH_RELEASE_POSITION = 0.2128;
 
-    public static final double ARM_RETRACT_POSITION = 0.59;
+    public static final double ARM_RETRACT_POSITION = 0.7;
     public static final double ARM_FULL_EXTEND = 0.0;
     public static final double ARM_HALF_EXTEND = (ARM_RETRACT_POSITION + ARM_FULL_EXTEND) / 2.0;
 
@@ -142,6 +142,8 @@ public class CompDrive extends OpMode {
         androidUI = ((Activity) hardwareMap.appContext).findViewById(relativeLayoutId);
 
     }
+
+
 
     double CLIMB_POWER = 1;
 
@@ -299,6 +301,8 @@ public class CompDrive extends OpMode {
     }
 
 
+    int extensionStatus = 0;
+
     public void pollTowerInputs() {
         if ((input.right_trigger.down() || input.left_trigger.down())&& !MacroSequence.isRunning()) {
 
@@ -324,19 +328,21 @@ public class CompDrive extends OpMode {
                         }
                         ArmToDumpPointMacro.runToTunedArmPos(0.6);*/
 
-                        if (RobotComponents.extendo_servo.getPosition() == ARM_FULL_EXTEND) {
+                        if (extensionStatus == 2) {
                             /*activeExtendoStepIndex = 0;
                             RobotComponents.coroutines.startRoutine(smallStepExtendo(
                                     ARM_FULL_EXTEND, ARM_RETRACT_POSITION,
                                     10
                             ));*/
+                            extensionStatus = 0;
                             RobotComponents.extendo_servo.setPosition(ARM_RETRACT_POSITION);
-                        } else if (RobotComponents.extendo_servo.getPosition() == ARM_HALF_EXTEND) {
+                        } else if (extensionStatus == 1) {
                             /*activeExtendoStepIndex = 0;
                             RobotComponents.coroutines.startRoutine(smallStepExtendo(
                                     ARM_HALF_EXTEND, ARM_FULL_EXTEND,
                                     10
                             ));*/
+                            extensionStatus = 2;
                             RobotComponents.extendo_servo.setPosition(ARM_FULL_EXTEND);
                         } else {
                             /*RobotComponents.coroutines.startRoutine(smallStepExtendo(
@@ -344,11 +350,14 @@ public class CompDrive extends OpMode {
                                     10
                             ));*/
 
+                            extensionStatus = 1;
                             RobotComponents.extendo_servo.setPosition(ARM_HALF_EXTEND);
                         }
 
                         return;
                     }
+
+                    extensionStatus = 0;
 
                     TOWER_UP_SEQUENCE.get().append(
                             new RunActionMacro((o) -> {
