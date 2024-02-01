@@ -8,8 +8,8 @@ import org.firstinspires.ftc.teamcode.components.RobotComponents;
 
 public class DumpPoseMacro extends PathStep {
 
-    private static final double WRIST_GOAL_POS = 0.85;
-    private static final double BUCKET_GOAL_POS = 0.38;
+    private static final double WRIST_GOAL_POS = 0.469;
+    private static final double BUCKET_GOAL_POS = 0.22;
 
     @Override
     public void onStart(){
