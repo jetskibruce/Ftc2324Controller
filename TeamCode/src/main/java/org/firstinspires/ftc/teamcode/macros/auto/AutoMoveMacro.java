@@ -22,12 +22,12 @@ public class AutoMoveMacro extends PathStep {
         Right
     }
 
-    private SampleMecanumDrive drive;
-    private int goalTicksTraveled;
-    private int startTicks;
-    private Encoder relevantEncoder;
-    private Pose2d drivePowers;
-    private double lerpMultiplier = 1;
+    protected SampleMecanumDrive drive;
+    protected int goalTicksTraveled;
+    protected int startTicks;
+    protected Encoder relevantEncoder;
+    protected Pose2d drivePowers;
+    protected double lerpMultiplier = 1;
 
     public AutoMoveMacro(SampleMecanumDrive drive, LateralDirection direction, double distanceInches, double power) {
         this.drive = drive;
@@ -106,6 +106,10 @@ public class AutoMoveMacro extends PathStep {
         lerpMultiplier = smoothSpeed(proportionTraveled);
 
         drive.setWeightedDrivePower(drivePowers.times(lerpMultiplier));
+
+    }
+
+    protected void calculateLerpMultiplier() {
 
     }
 

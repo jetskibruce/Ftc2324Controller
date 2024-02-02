@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes.auto;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.robot.Robot;
@@ -22,7 +23,12 @@ import org.firstinspires.ftc.teamcode.macros.generic.RunExtraMacro;
 import org.firstinspires.ftc.teamcode.macros.tuckdown.ArbitraryDelayMacro;
 import org.firstinspires.ftc.teamcode.opmodes.teleop.functional.CompDrive;
 
+import java.security.spec.ECField;
+
 @Autonomous(name="RedEndzone CLOSE Placement Auto", group="aCompete")
+// THIS OPMODE HAS TO BE RUN ONE TIME BEFORE IT WILL WORK PER_RESTART
+//KEEP IN MIND IF YOU ENABLE
+@Disabled
 public class CompAuto extends OpMode {
 
     protected AutoMoveMacro.LateralDirection strafeDirection = AutoMoveMacro.LateralDirection.Right;
@@ -36,6 +42,8 @@ public class CompAuto extends OpMode {
         RobotComponents.init(this.hardwareMap);
 
         drive = new SampleMecanumDrive(this.hardwareMap);
+
+        RobotComponents.extendo_servo.setPosition(CompDrive.ARM_RETRACT_POSITION);
 
     }
 
@@ -72,18 +80,26 @@ public class CompAuto extends OpMode {
                 }),
                 new AutoMoveMacro(
                         drive, strafeDirection,
-                        22.5, 0.5
+                        22.5, 0.35
                         ),
                 new AutoCorrectHeadingDumb(
-                        drive, 0, 0.04, 4.0
+                        drive, 0, 0.06, 2.5
                 ).giveTimeout(750),
                 new ArbitraryDelayMacro(400),
                 new AutoMoveMacro(
                         drive, AutoMoveMacro.LateralDirection.Backward,
                         35, 0.35
                         ),
+                new AutoCorrectHeadingDumb(
+                        drive, 0, 0.06, 2.5
+                ).giveTimeout(750),
+
                 new RunActionMacro((o) -> {
                         CompDrive.TOWER_UP_SEQUENCE.get().append(
+                                new RunActionMacro((o5) -> {
+                                    RobotComponents.extendo_servo.setPosition(CompDrive.ARM_HALF_EXTEND);
+                                    return false;
+                                }),
                                 new ArbitraryDelayMacro(700),
                                 new RunActionMacro((o2) -> {
                                     RobotComponents.left_pixel_hold_servo.setPosition(
@@ -93,6 +109,15 @@ public class CompAuto extends OpMode {
                                             CompDrive.PIXEL_RELEASE_POSITION
                                     );
                                     MacroSequence.begin("Scoot Back",
+                                            new RunActionMacro((o_) -> {
+                                                try {
+
+                                                    RobotComponents.soundPool.play("yippee.mp3");
+                                                } catch (Exception e) {
+
+                                                }
+                                                return false;
+                                            }),
                                             new ArbitraryDelayMacro(700),
                                             new RunActionMacro((o3) -> {
                                                 //telemetry.speak("beep beep beep beep");
@@ -104,11 +129,11 @@ public class CompAuto extends OpMode {
                                                                         4, 0.5
                                                                 ),
                                                                 new AutoCorrectHeadingDumb(
-                                                                        drive, 0, 0.04, 2.5
+                                                                        drive, 0, 0.06, 2.5
                                                                 ).giveTimeout(750),
                                                                 new AutoMoveMacro(
                                                                         drive, oppDirection,
-                                                                        18 * finalScootDistanceMultiplier, 0.4
+                                                                        22 * finalScootDistanceMultiplier, 0.35
                                                                 ),
                                                                 new RunActionMacro((o4) -> {
                                                                     MacroSequence.begin("stop intake",
