@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.components.RobotComponents;
 
 public class DumpBucketMacro extends PathStep {
 
-    private static final double BUCKET_GOAL_POS = 0.507;
+    private static final double BUCKET_GOAL_POS = 0.3;
 
     private MotorPath upPath = null;
 
