@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.view.View;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.qualcomm.ftccommon.SoundPlayer;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -13,6 +14,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.robot.Robot;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.android.AndroidSoundPool;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.components.RobotComponents;
@@ -48,6 +50,8 @@ public class CompDrive extends OpMode {
 
     private SampleMecanumDrive drive = null;
 
+
+
     private int current_pos = 0;
     private int next_pos = 0;
 
@@ -59,7 +63,7 @@ public class CompDrive extends OpMode {
     private static final double CLIMBER_RELEASE_POSITION = 0.623;
 
     private static final double LAUNCH_HOLD_POSITION = 0.555;
-    private static final double LAUNCH_RELEASE_POSITION = 0.2128;
+    private static final double LAUNCH_RELEASE_POSITION = 0;
 
     public static final double ARM_RETRACT_POSITION = 0.7;
     public static final double ARM_FULL_EXTEND = 0.0;
@@ -109,7 +113,8 @@ public class CompDrive extends OpMode {
     @Override
     public void init() {
 
-        telemetry.speak("Arm the drone again");
+
+        //telemetry.speak("Arm the drone again");
 
         outake_Servo=hardwareMap.get(Servo.class,"outake_servo");
         outake_Servo.setPosition(closed_pos);
@@ -248,6 +253,13 @@ public class CompDrive extends OpMode {
             RobotComponents.climb_motor.setPower(1);
             RobotComponents.climber_clasp_servo.setPosition(CLIMBER_RELEASE_POSITION);
 
+            if (!initializedClimb) {
+                try {
+                    RobotComponents.soundPool.play("turret-lock.mp3");
+                } catch (Exception e) {
+
+                }
+            }
 
             initializedClimb = true;
 

@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.macros.auto.AutoOuttakePoseMacro;
 import org.firstinspires.ftc.teamcode.macros.tuckdown.ArbitraryDelayMacro;
 import org.firstinspires.ftc.teamcode.macros.arm.IntakePoseMacro;
 
-@Autonomous(name="Drive Forward", group="aCompete")
+@Autonomous(name="Drive Forward", group="abOldCompete")
 public class DriveForwardAuto extends OpMode {
 
 

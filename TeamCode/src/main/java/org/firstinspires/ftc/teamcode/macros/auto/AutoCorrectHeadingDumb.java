@@ -50,6 +50,8 @@ public class AutoCorrectHeadingDumb extends PathStep {
             drivePowers = new Pose2d(0, 0, -1);
         } else if (goalHeading < angles.getYaw(AngleUnit.DEGREES)) {
             drivePowers = new Pose2d(0, 0, 1);
+        } else {
+            finish();
         }
 
         drivePowers = drivePowers.times(power);

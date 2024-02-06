@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.components;
 
+import com.qualcomm.ftccommon.SoundPlayer;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -9,6 +10,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.android.AndroidSoundPool;
 import org.firstinspires.ftc.teamcode.excutil.coroutines.CoroutineManager;
 import org.firstinspires.ftc.teamcode.macros.MacroSequence;
 import org.firstinspires.ftc.teamcode.util.Encoder;
@@ -68,6 +70,8 @@ public class RobotComponents {
 
     public static IMU imu;
 
+    public static AndroidSoundPool soundPool;
+
     public static Encoder parallelEncoder, perpendicularEncoder;
 
     public static List<ServoComponent> servos = new ArrayList<>();
@@ -94,6 +98,10 @@ public class RobotComponents {
 
     public static void init(HardwareMap hardwareMap) {
         MacroSequence.reset();
+
+        soundPool = new AndroidSoundPool();
+        soundPool.initialize(SoundPlayer.getInstance());
+        RobotComponents.soundPool.setVolume(1);
 
         imu = hardwareMap.get(IMU.class, "imu");
 
