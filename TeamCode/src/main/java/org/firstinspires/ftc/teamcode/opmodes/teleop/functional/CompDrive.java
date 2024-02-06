@@ -8,6 +8,8 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.robot.Robot;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -79,6 +81,9 @@ public class CompDrive extends OpMode {
                 new TuckWristDownMacro(),
                 new IntakePoseMacro()
             );
+    Servo outake_Servo;
+    double extened_pos =0;
+    double closed_pos =.7;
 
 
     @Override
@@ -98,12 +103,16 @@ public class CompDrive extends OpMode {
 
 
 
+
     }
 
     @Override
     public void init() {
 
         telemetry.speak("Arm the drone again");
+
+        outake_Servo=hardwareMap.get(Servo.class,"outake_servo");
+        outake_Servo.setPosition(closed_pos);
 
         drive = new SampleMecanumDrive(hardwareMap);
 
@@ -200,6 +209,12 @@ public class CompDrive extends OpMode {
         MacroSequence.appendDebugTo(telemetry);
 
         telemetry.update();
+
+        if (gamepad1.dpad_right) {
+            outake_Servo.setPosition(extened_pos);
+        } else {
+            outake_Servo.setPosition(closed_pos);
+        }
 
     }
 
