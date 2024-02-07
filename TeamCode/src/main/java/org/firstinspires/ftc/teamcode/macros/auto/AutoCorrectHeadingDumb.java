@@ -10,6 +10,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.components.RobotComponents;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.excutil.RMath;
 import org.firstinspires.ftc.teamcode.macros.PathStep;
 
 public class AutoCorrectHeadingDumb extends PathStep {
@@ -42,6 +43,8 @@ public class AutoCorrectHeadingDumb extends PathStep {
 
     int numTimesCorrect = 0;
 
+    double speedMultiplier = 1;
+
     @Override
     public void onTick(OpMode opMode) {
         YawPitchRollAngles angles = RobotComponents.imu.getRobotYawPitchRollAngles();
@@ -55,11 +58,14 @@ public class AutoCorrectHeadingDumb extends PathStep {
         }
 
         drivePowers = drivePowers.times(power);
-        drive.setWeightedDrivePower(drivePowers);
+        drive.setWeightedDrivePower(drivePowers.times(speedMultiplier));
 
-        if (Math.abs(angles.getYaw(AngleUnit.DEGREES) - goalHeading ) < threshold) {
+        if (Math.abs(angles.getYaw(AngleUnit.DEGREES) - goalHeading) < threshold) {
             numTimesCorrect++;
-            if ((timeout != null && (time.milliseconds() > timeout)) || numTimesCorrect > 3) {
+            speedMultiplier *= 0.95f;
+            speedMultiplier = RMath.clamp(speedMultiplier, 0.01f, 1f);
+            // prolly make time based
+            if ((timeout != null && (time.milliseconds() > timeout)) || numTimesCorrect > 50) {
                 finish();
                 return;
             } else {
