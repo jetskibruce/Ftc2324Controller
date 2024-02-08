@@ -1,29 +1,11 @@
 package org.firstinspires.ftc.teamcode.opmodes.teleop.debug;
 
-import android.app.Activity;
-import android.graphics.Color;
-import android.view.View;
-
-import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.components.RobotComponents;
-import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.excutil.Input;
-import org.firstinspires.ftc.teamcode.excutil.MotorPath;
-import org.firstinspires.ftc.teamcode.excutil.RMath;
-import org.firstinspires.ftc.teamcode.macros.Flag;
-import org.firstinspires.ftc.teamcode.macros.MacroSequence;
-import org.firstinspires.ftc.teamcode.macros.arm.IntakePoseMacro;
-import org.firstinspires.ftc.teamcode.macros.arm.down.LowerArmMacro;
-import org.firstinspires.ftc.teamcode.macros.arm.down.TuckWristDownMacro;
-import org.firstinspires.ftc.teamcode.macros.arm.up.ArmToDumpPointMacro;
-import org.firstinspires.ftc.teamcode.macros.arm.up.TuckWristForRiseMacro;
-import org.firstinspires.ftc.teamcode.macros.generic.RunActionMacro;
-import org.firstinspires.ftc.teamcode.opmodes.teleop.functional.DriveTest_2;
 
 @TeleOp(group = "bControl", name = "Spool Control")
 public class Spool extends OpMode {

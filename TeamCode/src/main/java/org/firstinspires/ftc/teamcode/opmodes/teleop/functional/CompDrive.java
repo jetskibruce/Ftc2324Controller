@@ -5,16 +5,12 @@ import android.graphics.Color;
 import android.view.View;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.qualcomm.ftccommon.SoundPlayer;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.robot.Robot;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.android.AndroidSoundPool;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.components.RobotComponents;
@@ -24,20 +20,17 @@ import org.firstinspires.ftc.teamcode.excutil.MotorPath;
 import org.firstinspires.ftc.teamcode.excutil.RMath;
 import org.firstinspires.ftc.teamcode.excutil.coroutines.CoroutineAction;
 import org.firstinspires.ftc.teamcode.excutil.coroutines.CoroutineResult;
-import org.firstinspires.ftc.teamcode.macros.Flag;
+import org.firstinspires.ftc.teamcode.excutil.Flag;
 import org.firstinspires.ftc.teamcode.macros.MacroSequence;
 import org.firstinspires.ftc.teamcode.macros.arm.IntakePoseMacro;
 import org.firstinspires.ftc.teamcode.macros.arm.down.LowerArmMacro;
 import org.firstinspires.ftc.teamcode.macros.arm.down.TuckWristDownMacro;
 import org.firstinspires.ftc.teamcode.macros.arm.up.ArmToDumpPointMacro;
-import org.firstinspires.ftc.teamcode.macros.arm.up.DumpBucketMacro;
 import org.firstinspires.ftc.teamcode.macros.arm.up.TuckWristForRiseMacro;
 import org.firstinspires.ftc.teamcode.macros.generic.RunActionMacro;
 import org.firstinspires.ftc.teamcode.macros.tuckdown.ArbitraryDelayMacro;
 
 import java.util.function.Supplier;
-
-import javax.crypto.Mac;
 
 @TeleOp(group = "aCompete", name = "Competition Drive")
 public class CompDrive extends OpMode {

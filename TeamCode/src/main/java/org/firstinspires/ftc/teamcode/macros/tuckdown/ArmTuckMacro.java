@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.excutil.RMath;
-import org.firstinspires.ftc.teamcode.macros.Flag;
+import org.firstinspires.ftc.teamcode.excutil.Flag;
 import org.firstinspires.ftc.teamcode.macros.PathStep;
 
 public class ArmTuckMacro extends PathStep {

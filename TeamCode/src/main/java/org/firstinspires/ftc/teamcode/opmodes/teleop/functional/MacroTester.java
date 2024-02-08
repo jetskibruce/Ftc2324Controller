@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.excutil.Input;
-import org.firstinspires.ftc.teamcode.macros.Flag;
+import org.firstinspires.ftc.teamcode.excutil.Flag;
 import org.firstinspires.ftc.teamcode.macros.MacroSequence;
 import org.firstinspires.ftc.teamcode.components.RobotComponents;
 import org.firstinspires.ftc.teamcode.macros.PathStep;
@@ -130,11 +130,11 @@ public class MacroTester extends LinearOpMode {
 
             }
 
-            if (MacroSequence.getActiveMacro() != null) {
-                if (MacroSequence.getActiveMacro() instanceof RaiseTuckMacro) {
-                    MacroSequence.getActiveMacro().onTick(this);
+            if (MacroSequence.getActiveStep() != null) {
+                if (MacroSequence.getActiveStep() instanceof RaiseTuckMacro) {
+                    MacroSequence.getActiveStep().onTick(this);
                 } else {
-                    telemetry.addData("executing macro", "not raise tuck, " + MacroSequence.getActiveMacro().getClass().getName());
+                    telemetry.addData("executing macro", "not raise tuck, " + MacroSequence.getActiveStep().getClass().getName());
                 }
             }
 

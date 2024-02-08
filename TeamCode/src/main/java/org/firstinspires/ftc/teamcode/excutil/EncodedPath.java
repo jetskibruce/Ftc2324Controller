@@ -6,6 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
+@Deprecated
+/**
+ * "Do not use, rely on new macro system instead"
+ */
 public class EncodedPath {
 
     private boolean started = false;

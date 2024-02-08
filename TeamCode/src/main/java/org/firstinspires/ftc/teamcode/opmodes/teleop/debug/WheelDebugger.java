@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.excutil.Input;
-import org.firstinspires.ftc.teamcode.macros.Flag;
+import org.firstinspires.ftc.teamcode.excutil.Flag;
 import org.firstinspires.ftc.teamcode.opmodes.teleop.functional.DriveTest_2;
 
 

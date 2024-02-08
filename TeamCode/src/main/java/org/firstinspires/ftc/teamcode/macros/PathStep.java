@@ -4,6 +4,9 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import java.util.function.Predicate;
 
+/**
+ * Extend this to define a step in a MacroSequence.
+ */
 public abstract class PathStep {
 
     private PathStep nextStep = null;
@@ -23,6 +26,9 @@ public abstract class PathStep {
         onStart();
     }
 
+    /**
+     * Called the first tick of PathStep execution and never again.
+     */
     public abstract void onStart();
 
     public void setHostPath(MacroSequence path) {

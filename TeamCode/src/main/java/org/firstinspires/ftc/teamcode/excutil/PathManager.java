@@ -7,6 +7,8 @@ import org.checkerframework.checker.units.qual.A;
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated
+// "no reason i just don't really use it and don't remember how effective it is"
 public class PathManager {
 
     private OpMode owner;
