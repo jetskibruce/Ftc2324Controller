@@ -78,9 +78,9 @@ public class CompDrive extends OpMode {
                 new TuckWristDownMacro(),
                 new IntakePoseMacro()
             );
-    Servo outake_Servo;
-    double extened_pos =0;
-    double closed_pos =.7;
+    //Servo outake_Servo;
+    //double extened_pos =0;
+    //double closed_pos =.7;
 
 
     @Override
@@ -109,8 +109,8 @@ public class CompDrive extends OpMode {
 
         //telemetry.speak("Arm the drone again");
 
-        outake_Servo=hardwareMap.get(Servo.class,"outake_servo");
-        outake_Servo.setPosition(closed_pos);
+        //outake_Servo=hardwareMap.get(Servo.class,"outake_servo");
+        //outake_Servo.setPosition(closed_pos);
 
         drive = new SampleMecanumDrive(hardwareMap);
 
@@ -208,10 +208,10 @@ public class CompDrive extends OpMode {
 
         telemetry.update();
 
-        if (gamepad1.dpad_right) {
-            outake_Servo.setPosition(extened_pos);
-        } else {
-            outake_Servo.setPosition(closed_pos);
+        //if (gamepad1.dpad_right) {
+        //    outake_Servo.setPosition(extened_pos);
+        //} else {
+        //    outake_Servo.setPosition(closed_pos);
         }
 
     }
