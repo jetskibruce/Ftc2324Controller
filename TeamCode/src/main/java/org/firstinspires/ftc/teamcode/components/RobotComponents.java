@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.android.AndroidSoundPool;
 import org.firstinspires.ftc.teamcode.excutil.coroutines.CoroutineManager;
+import org.firstinspires.ftc.teamcode.excutil.liveconfig.LiveSettings;
 import org.firstinspires.ftc.teamcode.macros.MacroSequence;
 import org.firstinspires.ftc.teamcode.util.Encoder;
 
@@ -142,6 +143,7 @@ public class RobotComponents {
     public static void tickSystems(OpMode activeMode) {
         coroutines.tick(activeMode);
         MacroSequence.tick(activeMode);
+        LiveSettings.tick(activeMode);
     }
 
     public static final double     COUNTS_PER_ENCODER_REV    = 8192 ;    // eg: TETRIX Motor Encoder
