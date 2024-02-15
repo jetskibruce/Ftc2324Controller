@@ -214,7 +214,7 @@ public class CompDrive extends OpMode {
         //    outake_Servo.setPosition(closed_pos);
         }
 
-    }
+
 
     public void pollPixelInputs() {
 
