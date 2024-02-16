@@ -67,9 +67,9 @@ public class CompDrive extends OpMode {
                 "Lift And Dump Sequence",
                 //new IntakePoseMacro(),
                 new TuckWristForRiseMacro(),
-                new ArmToDumpPointMacro()
+                new ArmToDumpPointMacro(
                 //new DumpBucketMacro(),
-            );
+            ));
 
     public static final Supplier<MacroSequence> TOWER_DOWN_SEQUENCE =
             () -> MacroSequence.compose(
