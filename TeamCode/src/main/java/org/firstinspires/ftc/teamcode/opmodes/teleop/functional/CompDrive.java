@@ -476,9 +476,9 @@ public class CompDrive extends OpMode {
 
         drive.setWeightedDrivePower(
                 new Pose2d(
-                        -DriveTest_2.deadZone(-gamepad1.left_stick_y) * ((flipControls) ? -1 : 1), // swapped 1 & 2
-                        DriveTest_2.deadZone(gamepad1.left_stick_x) * ((flipControls) ? -1 : 1),
-                        -DriveTest_2.deadZone(-gamepad1.right_stick_x)// * ((flipControls) ? -1 : 1)
+                        DriveTest_2.deadZone(-gamepad1.left_stick_y) * ((flipControls) ? -1 : 1), // swapped 1 & 2
+                        -DriveTest_2.deadZone(gamepad1.left_stick_x) * ((flipControls) ? -1 : 1),
+                        DriveTest_2.deadZone(-gamepad1.right_stick_x)// * ((flipControls) ? -1 : 1)
                 ).times(inputMult)
         );
 
