@@ -52,8 +52,8 @@ public class CompDrive extends OpMode {
 
     public static final double PIXEL_RELEASE_POSITION = 0.5;
     public static final double PIXEL_HOLD_POSITION = 1.0;
-    private static final double CLIMBER_HOLD_POSITION = 0.87;
-    private static final double CLIMBER_RELEASE_POSITION = 0.623;
+    private static final double CLIMBER_HOLD_POSITION = 0.0;
+    private static final double CLIMBER_RELEASE_POSITION = 0.75;
 
     private static final double LAUNCH_HOLD_POSITION = 0.555;
     private static final double LAUNCH_RELEASE_POSITION = 0;
