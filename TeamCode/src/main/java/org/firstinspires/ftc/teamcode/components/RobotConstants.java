@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.components;
 
+import static org.firstinspires.ftc.teamcode.components.RobotComponents.tower_motor;
+
 public class RobotConstants {
 
     public static final double PIXEL_RELEASE_POSITION = 0.5;
@@ -10,5 +12,5 @@ public class RobotConstants {
     public static final double BUCKET_SCORE_POSITION = .31;
     public static final double WRIST_TELEOP_POSITION = .54;
     public static final double BUCKET_TELEOP_POSITION = .227;
-    public static final double BUCKET_TELEOP_POSITION = .227;
+    final double TowerGoalPosition = (tower_motor.getCurrentPosition() - 1288); // -1042
 }
