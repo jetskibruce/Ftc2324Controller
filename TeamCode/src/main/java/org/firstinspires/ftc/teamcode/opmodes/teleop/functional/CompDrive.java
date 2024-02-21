@@ -226,6 +226,20 @@ public class CompDrive extends OpMode {
                 RobotComponents.left_pixel_hold_servo.setPosition(PIXEL_RELEASE_POSITION);
                 RobotComponents.right_pixel_hold_servo.setPosition(PIXEL_RELEASE_POSITION);
         }
+
+        else if (input.x.down()) {
+            if (RobotComponents.left_pixel_hold_servo.getPosition() == PIXEL_RELEASE_POSITION) {
+                RobotComponents.left_pixel_hold_servo.setPosition(PIXEL_HOLD_POSITION);
+            } else {
+                RobotComponents.left_pixel_hold_servo.setPosition(PIXEL_RELEASE_POSITION);
+            }
+        } else if (input.y.down()) {
+            if (RobotComponents.right_pixel_hold_servo.getPosition() == PIXEL_RELEASE_POSITION) {
+                RobotComponents.right_pixel_hold_servo.setPosition(PIXEL_HOLD_POSITION);
+            } else {
+                RobotComponents.right_pixel_hold_servo.setPosition(PIXEL_RELEASE_POSITION);
+            }
+        }
     }
 
     boolean initializedClimb = false;
@@ -242,7 +256,7 @@ public class CompDrive extends OpMode {
         }
 
 
-        if ((gamepad1.back || initializedClimb) && gamepad1.y) {
+        if (gamepad1.dpad_up) {
             RobotComponents.climb_motor.setPower(1);
             RobotComponents.climber_clasp_servo.setPosition(CLIMBER_RELEASE_POSITION);
 
@@ -256,6 +270,9 @@ public class CompDrive extends OpMode {
 
             initializedClimb = true;
 
+        }
+        else if (gamepad1.dpad_down) {
+            RobotComponents.climb_motor.setPower(-1);
         }
         else {
             RobotComponents.climb_motor.setPower(0);

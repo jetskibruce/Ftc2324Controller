@@ -16,6 +16,7 @@ import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.acmerobotics.roadrunner.trajectory.TrajectoryMarker;
 import com.acmerobotics.roadrunner.util.NanoClock;
 
+import org.firstinspires.ftc.teamcode.excutil.rrextensions.ConditionalSegment;
 import org.firstinspires.ftc.teamcode.trajectorysequence.sequencesegment.SequenceSegment;
 import org.firstinspires.ftc.teamcode.trajectorysequence.sequencesegment.TrajectorySegment;
 import org.firstinspires.ftc.teamcode.trajectorysequence.sequencesegment.TurnSegment;
@@ -168,6 +169,15 @@ public class TrajectorySequenceRunner {
                 driveSignal = new DriveSignal();
 
                 if (deltaTime >= currentSegment.getDuration()) {
+                    currentSegmentIndex++;
+                }
+            } else if (currentSegment instanceof ConditionalSegment) {
+                lastPoseError = new Pose2d();
+
+                targetPose = currentSegment.getStartPose();
+                driveSignal = new DriveSignal();
+
+                if (((ConditionalSegment)currentSegment).isDone() || deltaTime >= currentSegment.getDuration()) {
                     currentSegmentIndex++;
                 }
             }

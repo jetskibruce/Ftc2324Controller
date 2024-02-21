@@ -19,6 +19,7 @@ import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryAcceleration
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityConstraint;
 import com.acmerobotics.roadrunner.util.Angle;
 
+import org.firstinspires.ftc.teamcode.excutil.rrextensions.ConditionalSegment;
 import org.firstinspires.ftc.teamcode.trajectorysequence.sequencesegment.SequenceSegment;
 import org.firstinspires.ftc.teamcode.trajectorysequence.sequencesegment.TrajectorySegment;
 import org.firstinspires.ftc.teamcode.trajectorysequence.sequencesegment.TurnSegment;
@@ -27,6 +28,7 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.sequencesegment.WaitSeg
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.BooleanSupplier;
 
 public class TrajectorySequenceBuilder {
     private final double resolution = 0.25;
@@ -461,6 +463,18 @@ public class TrajectorySequenceBuilder {
         sequenceSegments.add(new WaitSegment(lastPose, seconds, Collections.emptyList()));
 
         currentDuration += seconds;
+        return this;
+    }
+
+    public TrajectorySequenceBuilder waitUntil(BooleanSupplier truthTest) {
+        return waitUntil(truthTest, 10.0);
+    }
+
+    public TrajectorySequenceBuilder waitUntil(BooleanSupplier truthTest, double secondsTimeout) {
+        pushPath();
+        sequenceSegments.add(new ConditionalSegment(lastPose, truthTest, secondsTimeout, Collections.emptyList()));
+
+        currentDuration += secondsTimeout;
         return this;
     }
 

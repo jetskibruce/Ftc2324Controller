@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 
 @Config
+
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous(name="BlueSensing")
 public class BlueSensing extends LinearOpMode {
     Autonomous autonomous;
