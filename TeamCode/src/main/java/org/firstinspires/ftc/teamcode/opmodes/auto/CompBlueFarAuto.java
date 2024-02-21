@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes.auto;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.components.RobotComponents;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
@@ -13,6 +14,7 @@ import org.firstinspires.ftc.teamcode.opmodes.NerdOpMode;
 import org.firstinspires.ftc.teamcode.opmodes.teleop.functional.CompDrive;
 
 @Autonomous(name = "BlueEndzone FAR Placement Auto", group = "aCompete")
+@Disabled
 public class CompBlueFarAuto extends CompFarAuto  {
 
     SampleMecanumDrive drive;

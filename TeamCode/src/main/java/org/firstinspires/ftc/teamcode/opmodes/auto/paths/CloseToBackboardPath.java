@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes.auto.paths;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+
 import org.firstinspires.ftc.teamcode.components.RobotComponents;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.excutil.funcs.Supplier;
@@ -10,6 +12,7 @@ import org.firstinspires.ftc.teamcode.macros.generic.RunActionMacro;
 import org.firstinspires.ftc.teamcode.macros.tuckdown.ArbitraryDelayMacro;
 import org.firstinspires.ftc.teamcode.opmodes.teleop.functional.CompDrive;
 
+@Disabled
 public class CloseToBackboardPath {
 
     public static class TowerPointingPathArguments {

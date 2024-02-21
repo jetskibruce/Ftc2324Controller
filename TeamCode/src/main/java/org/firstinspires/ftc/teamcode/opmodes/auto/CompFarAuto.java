@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes.auto;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.robot.Robot;
 
 import org.firstinspires.ftc.teamcode.components.RobotComponents;
@@ -18,6 +19,7 @@ import org.firstinspires.ftc.teamcode.opmodes.NerdOpMode;
 import org.firstinspires.ftc.teamcode.opmodes.teleop.functional.CompDrive;
 
 @Autonomous(name = "RedEndzone FAR Placement Auto", group = "aCompete")
+@Disabled
 public class CompFarAuto extends NerdOpMode  {
 
     AutoMoveMacro.LateralDirection strafeDirection = AutoMoveMacro.LateralDirection.Right;
