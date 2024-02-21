@@ -4,6 +4,7 @@ import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.REVERSE;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.acmerobotics.roadrunner.trajectory.MarkerCallback;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -19,6 +20,8 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 import static org.firstinspires.ftc.teamcode.components.RobotComponents.*;
 import static org.firstinspires.ftc.teamcode.components.RobotConstants.*;
+
+import java.util.function.Supplier;
 
 @Autonomous(name="RedEndzone Shortside SENSING Auto", group="aCompete")
 public class CloseRedSENSINGExtended extends LinearOpMode {
@@ -39,6 +42,28 @@ public class CloseRedSENSINGExtended extends LinearOpMode {
 
         extendo_servo.setPosition(0.7);
 
+        Supplier<MarkerCallback> armRaiseMarker = () -> () -> {
+            RobotComponents.wrist_servo.setPosition(0.54);
+            RobotComponents.bucket_servo.setPosition(0.1);
+            RobotComponents.tower_motor.setTargetPosition((int) TowerGoalPosition);
+            towerUpPath = MotorPath.runToPosition(RobotComponents.tower_motor, (int) (TowerGoalPosition), 0.5);
+            RobotComponents.wrist_servo.setPosition(0.9);
+            RobotComponents.bucket_servo.setPosition(0.49);
+        };
+
+        Supplier<MarkerCallback> armLowerMarker = () -> () -> {
+            RobotComponents.bucket_servo.setPosition(0.49);
+            RobotComponents.wrist_servo.setPosition(0.9);
+            RobotComponents.tower_motor.setDirection(REVERSE);
+            MotorPath.runToPosition(RobotComponents.tower_motor, (int) (TowerGoalPosition), 0.2);
+            RobotComponents.bucket_servo.setPosition(00.227);
+            RobotComponents.wrist_servo.setPosition(0.54);
+        };
+
+        Supplier<MarkerCallback> dropPixelMarker = () -> () -> {
+            RobotComponents.right_pixel_hold_servo.setPosition(PIXEL_RELEASE_POSITION); //Drops Pixel
+            RobotComponents.left_pixel_hold_servo.setPosition(PIXEL_RELEASE_POSITION);
+        };
 
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
@@ -81,22 +106,11 @@ public class CloseRedSENSINGExtended extends LinearOpMode {
                 .waitSeconds(.15)
                 .back(18)
                 .strafeLeft(5)
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> RobotComponents.wrist_servo.setPosition(0.54))
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> RobotComponents.bucket_servo.setPosition(0.1))
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> RobotComponents.tower_motor.setTargetPosition((int) TowerGoalPosition))
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> MotorPath.runToPosition(RobotComponents.tower_motor, (int) (TowerGoalPosition), 0.5))
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> RobotComponents.wrist_servo.setPosition(0.9))
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> RobotComponents.bucket_servo.setPosition(0.49))
+                .addTemporalMarker(armRaiseMarker.get())
                 .waitSeconds(.70)
-                .UNSTABLE_addTemporalMarkerOffset(.25, () -> RobotComponents.right_pixel_hold_servo.setPosition(PIXEL_RELEASE_POSITION)) //Drops Pixel
-                .UNSTABLE_addTemporalMarkerOffset(.25, () -> RobotComponents.left_pixel_hold_servo.setPosition(PIXEL_RELEASE_POSITION)) //Drops Pixel
+                .addTemporalMarker(dropPixelMarker.get())
                 .waitSeconds(.55)
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> RobotComponents.bucket_servo.setPosition(0.49))
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> RobotComponents.wrist_servo.setPosition(0.9))
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> RobotComponents.tower_motor.setDirection(REVERSE))
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> MotorPath.runToPosition(RobotComponents.tower_motor, (int) (TowerGoalPosition), 0.2))
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> RobotComponents.bucket_servo.setPosition(00.227))
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> RobotComponents.wrist_servo.setPosition(0.54))
+                .addTemporalMarker(armLowerMarker.get())
                 .waitSeconds(.25)
                 .forward(2)
                 .strafeLeft(18)
@@ -115,22 +129,11 @@ public class CloseRedSENSINGExtended extends LinearOpMode {
                 .waitSeconds(.15)
                 .back(40)
                 .strafeRight(5)
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> RobotComponents.wrist_servo.setPosition(0.54))
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> RobotComponents.bucket_servo.setPosition(0.1))
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> RobotComponents.tower_motor.setTargetPosition((int) TowerGoalPosition))
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> MotorPath.runToPosition(RobotComponents.tower_motor, (int) (TowerGoalPosition), 0.5))
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> RobotComponents.wrist_servo.setPosition(0.9))
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> RobotComponents.bucket_servo.setPosition(0.49))
+                .addTemporalMarker(armRaiseMarker.get())
                 .waitSeconds(.70)
-                .UNSTABLE_addTemporalMarkerOffset(.25, () -> RobotComponents.right_pixel_hold_servo.setPosition(PIXEL_RELEASE_POSITION)) //Drops Pixel
-                .UNSTABLE_addTemporalMarkerOffset(.25, () -> RobotComponents.left_pixel_hold_servo.setPosition(PIXEL_RELEASE_POSITION)) //Drops Pixel
+                .addTemporalMarker(dropPixelMarker.get())
                 .waitSeconds(.55)
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> RobotComponents.bucket_servo.setPosition(0.49))
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> RobotComponents.wrist_servo.setPosition(0.9))
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> RobotComponents.tower_motor.setDirection(REVERSE))
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> MotorPath.runToPosition(RobotComponents.tower_motor, (int) (TowerGoalPosition), 0.2))
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> RobotComponents.bucket_servo.setPosition(00.227))
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> RobotComponents.wrist_servo.setPosition(0.54))
+                .addTemporalMarker(armLowerMarker.get())
                 .waitSeconds(.25)
                 .forward(2)
                 .strafeLeft(32)
@@ -140,7 +143,7 @@ public class CloseRedSENSINGExtended extends LinearOpMode {
         // CENTER
 
         TrajectorySequence closeCenterAuto = drive.trajectorySequenceBuilder(startPose)
-                .forward(28)
+                /*.forward(28)
                 .waitSeconds(1)
                 .addTemporalMarker(() -> RobotComponents.front_intake_motor.setPower(.30)) // Spit out
                 .waitSeconds(.45)
@@ -148,34 +151,89 @@ public class CloseRedSENSINGExtended extends LinearOpMode {
                 .back(3.5)
                 .turn(Math.toRadians(90))
                 .back(41)
-                .addTemporalMarker(() -> {
-                    RobotComponents.wrist_servo.setPosition(0.54);
-                    RobotComponents.bucket_servo.setPosition(0.1);
-                    RobotComponents.tower_motor.setTargetPosition((int) TowerGoalPosition);
-                    towerUpPath = MotorPath.runToPosition(RobotComponents.tower_motor, (int) (TowerGoalPosition), 0.5);
-                    RobotComponents.wrist_servo.setPosition(0.9);
-                    RobotComponents.bucket_servo.setPosition(0.49);
-                })
-                .waitUntil(() -> towerUpPath.isComplete(10), 2.0)
-                //.waitSeconds(.70)
-
-                .addTemporalMarker(() -> {
-                    RobotComponents.right_pixel_hold_servo.setPosition(PIXEL_RELEASE_POSITION); //Drops Pixel
-                    RobotComponents.left_pixel_hold_servo.setPosition(PIXEL_RELEASE_POSITION);
-                }) //Drops Pixel
+                .addTemporalMarker(armRaiseMarker.get())
+                // example of how you can now use conditions as well
+                //.waitUntil(() -> towerUpPath.isComplete(10), 2.0)
+                .waitSeconds(.70)
+                .addTemporalMarker(dropPixelMarker.get()) //Drops Pixel
                 .waitSeconds(.55)
-                .addTemporalMarker(() -> {
-                        RobotComponents.bucket_servo.setPosition(0.49);
-                        RobotComponents.wrist_servo.setPosition(0.9);
-                        RobotComponents.tower_motor.setDirection(REVERSE);
-                        MotorPath.runToPosition(RobotComponents.tower_motor, (int) (TowerGoalPosition), 0.2);
-                        RobotComponents.bucket_servo.setPosition(00.227);
-                        RobotComponents.wrist_servo.setPosition(0.54);
-                })
+                .addTemporalMarker(armLowerMarker.get())
                 .waitSeconds(.25)
                 .forward(2)
                 .strafeLeft(24.5)
                 .back(8)
+                .build();*/
+                .forward(28)
+                .waitSeconds(1)
+                .addTemporalMarker(() -> front_intake_motor.setPower(.30)) // Spit out
+                .waitSeconds(.45)
+                .addTemporalMarker(() -> front_intake_motor.setPower(0)) // Stop outtake
+                .back(3.5)
+                .turn(Math.toRadians(90))
+                .back(41)
+                .addTemporalMarker(armRaiseMarker.get())
+                // example of how you can now use conditions as well
+                //.waitUntil(() -> towerUpPath.isComplete(10), 2.0)
+                .waitSeconds(.70)
+                .addTemporalMarker(dropPixelMarker.get()) //Drops Pixel
+                .waitSeconds(.55)
+                .addTemporalMarker(armLowerMarker.get())
+                .waitSeconds(.25)
+                .forward(2)
+                //.strafeLeft(24.5)
+                .strafeLeft(22.75)
+
+                .forward(46 + 40)
+                .strafeRight(24)
+                //.waitSeconds(0.2)
+
+                .forward(18)
+                //.splineTo(new Vector2d(-48, -36), Math.PI)
+                .turn(Math.toRadians(-25))
+                // do arm extend and smack smack
+                .addTemporalMarker(() -> {
+                    tower_motor.setTargetPosition(-0);
+
+
+                    coroutines.runLater(() -> {
+                        extendo_servo.setPosition(0);
+                        coroutines.runLater(() -> {
+                            wrist_servo.setPosition(0);
+                            bucket_servo.setPosition(0);
+                        }, 200);
+                    }, 200);
+                })
+                .waitSeconds(0.5)
+                .turn(Math.toRadians(25))
+                // do arm re-tuck and suck suck
+                .addTemporalMarker(() -> {
+                    wrist_servo.setPosition(0);
+                    bucket_servo.setPosition(0);
+
+                    coroutines.runLater(() -> {
+                        extendo_servo.setPosition(0);
+                        coroutines.runLater(() -> {
+                            tower_motor.setTargetPosition(-0);
+
+                        }, 200);
+                    }, 200);
+                    front_intake_motor.setPower(1);
+                })
+                // turn on intake too
+                .strafeLeft(4)
+                .forward(6)
+                .waitSeconds(0.7)
+                // no more intake
+                .addTemporalMarker(() -> {
+                    front_intake_motor.setPower(0);
+                })
+
+                // could consolidate a 6 and 14 into a back 20 here if we don't think going back
+                // will block alliance
+                .back(6)
+                .strafeLeft(20)
+                .back(14 + 46 + 40 + 8)
+
                 .build();
 
 
