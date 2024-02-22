@@ -81,16 +81,22 @@ public class CloseRedSENSING extends LinearOpMode {
 
         drive.setPoseEstimate(startPose);
 
-
+  //RIGHT
         TrajectorySequence rightCloseAuto = drive.trajectorySequenceBuilder(startPose)
-                .splineTo(new Vector2d(32.5, -36), Math.toRadians(180))
+                //.splineTo(new Vector2d(32.5, -36), Math.toRadians(180))
+                .forward(2)
+                .strafeRight(24)
+                .forward(30)
+                .turn(Math.toRadians(90))
+                .forward(8)
+                .back(5)
                 .waitSeconds(.15)
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> RobotComponents.front_intake_motor.setPower(.25)) // Spit out
-                .waitSeconds(.45)
+                .waitSeconds(.2)
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> RobotComponents.front_intake_motor.setPower(0)) // Stop outtake
-                .waitSeconds(.15)
-                .back(18-8)
-                .strafeLeft(5)
+                .waitSeconds(.45)
+                .strafeLeft(10)
+                .back(12)
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> RobotComponents.wrist_servo.setPosition(WRIST_IDLE_POSITION))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> RobotComponents.bucket_servo.setPosition(BUCKET_IDLE_POSITION))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> RobotComponents.tower_motor.setTargetPosition((int) TowerGoalPosition))
@@ -114,18 +120,19 @@ public class CloseRedSENSING extends LinearOpMode {
                 .build();
 
 
-
+// LEFT
         TrajectorySequence closeLeftAuto = drive.trajectorySequenceBuilder(startPose)
                 .forward(28)
                 .waitSeconds(.15)
                 .turn(Math.toRadians(90))
                 .waitSeconds(.55)
+                .forward(1)
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> RobotComponents.front_intake_motor.setPower(.3)) // Spit out
                 .waitSeconds(.45)
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> RobotComponents.front_intake_motor.setPower(0)) // Stop outtake
                 .waitSeconds(.15)
-                .back(40-8)
-                .strafeRight(5)
+                .back(43-8)
+                .strafeRight(7)
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> RobotComponents.wrist_servo.setPosition(WRIST_IDLE_POSITION))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> RobotComponents.bucket_servo.setPosition(BUCKET_IDLE_POSITION))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> RobotComponents.tower_motor.setTargetPosition((int) TowerGoalPosition))
@@ -153,12 +160,13 @@ public class CloseRedSENSING extends LinearOpMode {
         TrajectorySequence closeCenterAuto = drive.trajectorySequenceBuilder(startPose)
                 .forward(28)
                 .waitSeconds(1)
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> RobotComponents.front_intake_motor.setPower(.30)) // Spit out
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> RobotComponents.front_intake_motor.setPower(.25)) // Spit out
                 .waitSeconds(.45)
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> RobotComponents.front_intake_motor.setPower(0)) // Stop outtake
                 .back(3.5)
                 .turn(Math.toRadians(90))
-                .back(41-8)
+                .strafeRight(1.5)
+                .back(42-6)
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> RobotComponents.wrist_servo.setPosition(WRIST_IDLE_POSITION))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> RobotComponents.bucket_servo.setPosition(BUCKET_IDLE_POSITION))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> RobotComponents.tower_motor.setTargetPosition((int) TowerGoalPosition))

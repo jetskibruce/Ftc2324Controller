@@ -84,14 +84,19 @@ public class CloseBlueSENSING extends LinearOpMode {
         //LEFT
 
         TrajectorySequence closeLeftAuto = drive.trajectorySequenceBuilder(startPose)
-                .splineTo(new Vector2d(30.5, 30), Math.toRadians(180))
-                .waitSeconds(.15)
+              //  .splineTo(new Vector2d(30.5, 30), Math.toRadians(180))
+                .forward(2)
+                .strafeLeft(24)
+                .forward(30)
+                .turn(Math.toRadians(-90))
+                .forward(8)
+                .back(5)
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> RobotComponents.front_intake_motor.setPower(.25)) // Spit out
                 .waitSeconds(.45)
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> RobotComponents.front_intake_motor.setPower(0)) // Stop outtake
                 .waitSeconds(.15)
-                .back(20-8)
-                .strafeRight(5)
+                .back(12)
+                .strafeLeft(3)
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> RobotComponents.wrist_servo.setPosition(WRIST_IDLE_POSITION))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> RobotComponents.bucket_servo.setPosition(BUCKET_IDLE_POSITION))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> RobotComponents.tower_motor.setTargetPosition((int) TowerGoalPosition))
@@ -122,12 +127,12 @@ public class CloseBlueSENSING extends LinearOpMode {
                 .waitSeconds(.15)
                 .turn(Math.toRadians(-90))
                 .waitSeconds(.55)
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> RobotComponents.front_intake_motor.setPower(.3)) // Spit out
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> RobotComponents.front_intake_motor.setPower(.25)) // Spit out
                 .waitSeconds(.45)
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> RobotComponents.front_intake_motor.setPower(0)) // Stop outtake
                 .waitSeconds(.15)
                 .back(42-8)
-                .strafeLeft(5)
+                .strafeLeft(4)
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> RobotComponents.wrist_servo.setPosition(WRIST_IDLE_POSITION))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> RobotComponents.bucket_servo.setPosition(BUCKET_IDLE_POSITION))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> RobotComponents.tower_motor.setTargetPosition((int) TowerGoalPosition))
@@ -146,7 +151,7 @@ public class CloseBlueSENSING extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> RobotComponents.wrist_servo.setPosition(WRIST_TELEOP_POSITION))
                 .waitSeconds(.25)
                 .forward(4)
-                .strafeRight(38)
+                .strafeRight(35)
                 .back(8)
                 .build();
 

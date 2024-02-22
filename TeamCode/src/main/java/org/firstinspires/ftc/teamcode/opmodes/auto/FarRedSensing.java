@@ -85,7 +85,7 @@ public class FarRedSensing extends LinearOpMode {
                 .forward(28)
                 .turn(Math.toRadians(-90))
                 .waitSeconds(.15)
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> RobotComponents.front_intake_motor.setPower(.30)) // Spit out
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> RobotComponents.front_intake_motor.setPower(.28)) // Spit out
                 .waitSeconds(.45)
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> RobotComponents.front_intake_motor.setPower(0)) // Stop outtake
                 .waitSeconds(.15)
@@ -93,8 +93,8 @@ public class FarRedSensing extends LinearOpMode {
                 .turn(Math.toRadians(90))
                 .back(24)
                 .turn(Math.toRadians(90))
-                .back(90-8)
-                .strafeRight(16)
+                .back(93-8)
+                .strafeRight(19)
                 .back(6)
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> RobotComponents.wrist_servo.setPosition(WRIST_IDLE_POSITION))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> RobotComponents.bucket_servo.setPosition(BUCKET_IDLE_POSITION))
@@ -126,14 +126,14 @@ public class FarRedSensing extends LinearOpMode {
                 .turn(Math.toRadians(90))
                 .back(4)
                 .waitSeconds(.15)
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> RobotComponents.front_intake_motor.setPower(.25)) // Spit out
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> RobotComponents.front_intake_motor.setPower(.3)) // Spit out
                 .waitSeconds(.45)
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> RobotComponents.front_intake_motor.setPower(0)) // Stop outtake
                 .waitSeconds(.15)
                 .strafeLeft(24)
                 .back(90-8)
-                .strafeRight(30)
-                .back(2)
+                .strafeRight(31.5)
+                .back(3)
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> RobotComponents.wrist_servo.setPosition(WRIST_IDLE_POSITION))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> RobotComponents.bucket_servo.setPosition(BUCKET_IDLE_POSITION))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> RobotComponents.tower_motor.setTargetPosition((int) TowerGoalPosition))
@@ -168,7 +168,8 @@ public class FarRedSensing extends LinearOpMode {
                 .back(3.5)
                 .turn(Math.toRadians(90))
                 .strafeRight(3.5)
-                .back(96-8)
+                .back(98-8)
+                .strafeLeft(5)
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> RobotComponents.wrist_servo.setPosition(WRIST_IDLE_POSITION))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> RobotComponents.bucket_servo.setPosition(BUCKET_IDLE_POSITION))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> RobotComponents.tower_motor.setTargetPosition((int) TowerGoalPosition))

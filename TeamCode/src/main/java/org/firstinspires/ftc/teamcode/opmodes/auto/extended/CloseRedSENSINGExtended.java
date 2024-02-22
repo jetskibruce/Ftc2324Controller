@@ -23,7 +23,7 @@ import static org.firstinspires.ftc.teamcode.components.RobotConstants.*;
 
 import java.util.function.Supplier;
 
-@Autonomous(name="RedEndzone Shortside SENSING Auto", group="aCompete")
+@Autonomous(name="RedEndzone Shortside SENSING Extended Auto", group="aCompete")
 public class CloseRedSENSINGExtended extends LinearOpMode {
 
     public Webcam webcam = new Webcam();
@@ -181,9 +181,9 @@ public class CloseRedSENSINGExtended extends LinearOpMode {
                 .waitSeconds(.25)
                 .forward(2)
                 //.strafeLeft(24.5)
-                .strafeLeft(22.75)
+                .strafeLeft(21)
 
-                .forward(46 + 40)
+                .forward(86+18)
                 .strafeRight(24)
                 //.waitSeconds(0.2)
 

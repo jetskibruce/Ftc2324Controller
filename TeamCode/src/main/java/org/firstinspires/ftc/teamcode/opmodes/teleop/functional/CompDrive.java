@@ -453,14 +453,14 @@ public class CompDrive extends OpMode {
 
     public void pollDriveInputs() {
 
-        if (input.dpad_down.down()) {
+        /* if (input.dpad_down.down()) {
             flipControls = !flipControls;
             telemetry.speak((flipControls) ? "Reverse." : "Normal.");
             if (flipControls)
                 setUIColor(Color.DKGRAY);
             else
                 setUIColor(Color.GRAY);
-        }
+        } */
 
         if (input.dpad_left.down()) {
             if (inputMult == normalInputMult) {

@@ -80,12 +80,12 @@ public class FarBlueSENSING extends LinearOpMode {
 
         drive.setPoseEstimate(startPose);
 
-
+    //LEFT
         TrajectorySequence closeLeftAuto = drive.trajectorySequenceBuilder(startPose)
                 .forward(28)
                 .turn(Math.toRadians(90))
-                .forward(1)
                 .waitSeconds(.15)
+                .forward(1)
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> RobotComponents.front_intake_motor.setPower(.30)) // Spit out
                 .waitSeconds(.45)
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> RobotComponents.front_intake_motor.setPower(0)) // Stop outtake
@@ -94,8 +94,8 @@ public class FarBlueSENSING extends LinearOpMode {
                 .turn(Math.toRadians(-90))
                 .back(23)
                 .turn(Math.toRadians(-90))
-                .back(94-8)
-                .strafeLeft(20)
+                .back(96-8)
+                .strafeLeft(23)
                 .back(6)
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> RobotComponents.wrist_servo.setPosition(WRIST_IDLE_POSITION))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> RobotComponents.bucket_servo.setPosition(BUCKET_IDLE_POSITION))
@@ -135,7 +135,7 @@ public class FarBlueSENSING extends LinearOpMode {
                 .strafeRight(6)
                 .back(92)
                 .strafeLeft(34)
-                .back(10-8)
+                .back(12-8)
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> RobotComponents.wrist_servo.setPosition(WRIST_IDLE_POSITION))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> RobotComponents.bucket_servo.setPosition(BUCKET_IDLE_POSITION))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> RobotComponents.tower_motor.setTargetPosition((int) TowerGoalPosition))
@@ -171,7 +171,7 @@ public class FarBlueSENSING extends LinearOpMode {
                 .turn(Math.toRadians(-90))
                 .strafeLeft(3.5)
                 .back(96-8)
-                .strafeLeft(5)
+                .strafeLeft(4)
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> RobotComponents.wrist_servo.setPosition(WRIST_IDLE_POSITION))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> RobotComponents.bucket_servo.setPosition(BUCKET_IDLE_POSITION))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> RobotComponents.tower_motor.setTargetPosition((int) TowerGoalPosition))

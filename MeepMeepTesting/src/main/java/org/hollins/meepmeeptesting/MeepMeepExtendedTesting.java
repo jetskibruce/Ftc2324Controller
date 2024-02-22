@@ -1,6 +1,7 @@
 package org.hollins.meepmeeptesting;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.noahbres.meepmeep.MeepMeep;
 import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;
 import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
@@ -8,12 +9,12 @@ import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
 public class MeepMeepExtendedTesting {
 
     private static double pifrac(double fraction) {
-        return fraction * 3.141592654;
+        return fraction * Math.PI;
     }
 
 
     public static void main(String[] args) {
-        MeepMeep meepMeep = new MeepMeep(600);
+        MeepMeep meepMeep = new MeepMeep(700);
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
 
@@ -30,7 +31,7 @@ public class MeepMeepExtendedTesting {
 
                                     .back(3.5)
                                     .turn(Math.toRadians(90))
-                                    .back(41)
+                                    .back(39)
                                     .waitSeconds(.55)
                                     .waitSeconds(.25)
                                     .forward(2)
@@ -39,11 +40,11 @@ public class MeepMeepExtendedTesting {
                                     /* extended bit */
 
                                     .forward(46 + 40)
-                                    .strafeRight(24)
+                                    //.strafeRight(24)
                                     //.waitSeconds(0.2)
 
-                                    .forward(18)
-                                    //.splineTo(new Vector2d(-48, -36), Math.PI)
+                                    //.forward(18)
+                                    .splineToConstantHeading(new Vector2d(-56, -36), Math.PI)
                                     .turn(Math.toRadians(-25))
                                     // do arm extend and smack smack
                                     //.addTemporalMarker()
@@ -53,7 +54,7 @@ public class MeepMeepExtendedTesting {
                                     //.addTemporalMarker()
                                     // turn on intake too
                                     .strafeLeft(4)
-                                    .forward(6)
+                                    .forward(4)
                                     .waitSeconds(0.7)
                                     // no more intake
                                     //.addTemporalMarker()
@@ -65,13 +66,20 @@ public class MeepMeepExtendedTesting {
                                     .back(14 + 46 + 40)
 
                                     /* end extended bit */
+                                    // BNACKB AORDS
+                                    .strafeRight(25)
+                                    .back(4)
+                                    // EROP PAXERLS
+                                    .forward(4)
+                                    .strafeLeft(25)
+
 
                                     .back(8)
                                     .build()
 
                 );
 
-        meepMeep.setBackground(MeepMeep.Background.FIELD_POWERPLAY_OFFICIAL)
+        meepMeep.setBackground(MeepMeep.Background.FIELD_CENTERSTAGE_OFFICIAL)
                 .setDarkMode(true)
                 .setBackgroundAlpha(1f)
                 .addEntity(myBot)
