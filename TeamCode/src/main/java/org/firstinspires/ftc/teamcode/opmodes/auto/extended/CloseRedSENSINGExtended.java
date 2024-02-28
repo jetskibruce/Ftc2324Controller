@@ -191,35 +191,9 @@ public class CloseRedSENSINGExtended extends LinearOpMode {
                 //.splineTo(new Vector2d(-48, -36), Math.PI)
                 .turn(Math.toRadians(-25))
                 // do arm extend and smack smack
-                .addTemporalMarker(() -> {
-                    tower_motor.setTargetPosition(-0);
-
-
-                    coroutines.runLater(() -> {
-                        extendo_servo.setPosition(0);
-                        coroutines.runLater(() -> {
-                            wrist_servo.setPosition(0);
-                            bucket_servo.setPosition(0);
-                        }, 200);
-                    }, 200);
-                })
                 .waitSeconds(0.5)
                 .turn(Math.toRadians(25))
                 // do arm re-tuck and suck suck
-                .addTemporalMarker(() -> {
-                    wrist_servo.setPosition(0);
-                    bucket_servo.setPosition(0);
-
-                    coroutines.runLater(() -> {
-                        extendo_servo.setPosition(0);
-                        coroutines.runLater(() -> {
-                            tower_motor.setTargetPosition(-0);
-
-                        }, 200);
-                    }, 200);
-                    front_intake_motor.setPower(1);
-                })
-                // turn on intake too
                 .strafeLeft(4)
                 .forward(6)
                 .waitSeconds(0.7)
@@ -227,9 +201,6 @@ public class CloseRedSENSINGExtended extends LinearOpMode {
                 .addTemporalMarker(() -> {
                     front_intake_motor.setPower(0);
                 })
-
-                // could consolidate a 6 and 14 into a back 20 here if we don't think going back
-                // will block alliance
                 .back(6)
                 .strafeLeft(20)
                 .back(14 + 46 + 40 + 8)

@@ -52,8 +52,8 @@ public class CompDrive extends OpMode {
 
     public static final double PIXEL_RELEASE_POSITION = 0.5;
     public static final double PIXEL_HOLD_POSITION = 1.0;
-    private static final double CLIMBER_HOLD_POSITION = 0.0;
-    private static final double CLIMBER_RELEASE_POSITION = 0.75;
+    private static final double CLIMBER_HOLD_POSITION = 1;
+    private static final double CLIMBER_RELEASE_POSITION =0.3;
 
     private static final double LAUNCH_HOLD_POSITION = 0.555;
     private static final double LAUNCH_RELEASE_POSITION = 0;
@@ -477,15 +477,15 @@ public class CompDrive extends OpMode {
             }
         }
 
-        if (input.dpad_up.down() && !MacroSequence.isRunning()) {
-            MacroSequence.begin("Fix Bucket Pos",
-                    new TuckWristForRiseMacro(),
-                    new ArmToDumpPointMacro().limitToJustUp(),
-                    new ArbitraryDelayMacro(100),
-                    new TuckWristDownMacro(),
-                    new IntakePoseMacro()
-            );
-        }
+      //  if (input.dpad_up.down() && !MacroSequence.isRunning()) {
+      //      MacroSequence.begin("Fix Bucket Pos",
+     //               new TuckWristForRiseMacro(),
+      //              new ArmToDumpPointMacro().limitToJustUp(),
+      //              new ArbitraryDelayMacro(100),
+      //              new TuckWristDownMacro(),
+      //              new IntakePoseMacro()
+      //      );
+
 
 
 
