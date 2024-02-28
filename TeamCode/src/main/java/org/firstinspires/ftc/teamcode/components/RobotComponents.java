@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.components;
 
 import com.qualcomm.ftccommon.SoundPlayer;
+import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -8,7 +9,9 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.SwitchableLight;
 
 import org.firstinspires.ftc.robotcore.external.android.AndroidSoundPool;
 import org.firstinspires.ftc.teamcode.excutil.coroutines.CoroutineManager;
@@ -79,6 +82,10 @@ public class RobotComponents {
     // only positionable (read: encoders attached) motors
     public static List<MotorComponent> motors = new ArrayList<>();
 
+    public static RevColorSensorV3 left_pixel_color_sensor;
+    public static RevColorSensorV3 right_pixel_color_sensor;
+
+
     public static CoroutineManager coroutines = new CoroutineManager();
 
     private static Servo registerServo(HardwareMap hardwareMap, String id, String debugName) {
@@ -114,13 +121,14 @@ public class RobotComponents {
         back_left = hardwareMap.get(DcMotorEx.class, "back_left");
         back_right = hardwareMap.get(DcMotorEx.class, "back_right");
 
+
         tower_motor = registerEncodedMotor(hardwareMap, "tower_motor", "Tower Motor");
         climb_motor = registerEncodedMotor(hardwareMap, "climb_motor", "Climb Motor");
         tower_motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         //climb_motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         tower_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        front_intake_motor = hardwareMap.get(DcMotor.class, "front_intake_motor");
+         front_intake_motor = hardwareMap.get(DcMotor.class, "front_intake_motor");
 
         parallelEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "back_right"));
         perpendicularEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "back_left"));
@@ -138,6 +146,19 @@ public class RobotComponents {
 
         left_pixel_hold_servo = registerServo(hardwareMap, "bucket_left", "Left Pixel Hold Servo");
         right_pixel_hold_servo = registerServo(hardwareMap, "bucket_right", "Right Pixel Hold Servo");
+
+
+        left_pixel_color_sensor = hardwareMap.get(RevColorSensorV3.class, "left_pixel_color");
+        right_pixel_color_sensor = hardwareMap.get(RevColorSensorV3.class, "right_pixel_color");
+
+        // If possible, turn the light on in the beginning (it might already be on anyway,
+        // we just make sure it is if we can).
+        if (left_pixel_color_sensor instanceof SwitchableLight) {
+            ((SwitchableLight)left_pixel_color_sensor).enableLight(true);
+        }
+        if (right_pixel_color_sensor instanceof SwitchableLight) {
+            ((SwitchableLight)right_pixel_color_sensor).enableLight(true);
+        }
     }
 
     public static void tickSystems(OpMode activeMode) {

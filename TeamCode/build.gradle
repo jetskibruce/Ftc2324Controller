@@ -43,7 +43,10 @@ dependencies {
     implementation 'com.acmerobotics.dashboard:dashboard:0.4.12'
     implementation 'org.apache.commons:commons-math3:3.6.1'
     implementation 'com.acmerobotics.roadrunner:core:0.5.6'
-    implementation 'com.github.NoahBres:MeepMeep:2.0.2'
+    implementation 'com.github.NoahBres:MeepMeep:2.0.3'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.7'
+    //implementation 'org.nanohttpd:nanohttpd:2.3.1'
+    //implementation 'org.apache.commons:commons-text:1.11.0'
+
 
 }

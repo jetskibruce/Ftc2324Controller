@@ -9,9 +9,11 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.robot.Robot;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.components.RobotComponents;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
@@ -53,7 +55,7 @@ public class CompDrive extends OpMode {
     public static final double PIXEL_RELEASE_POSITION = 0.5;
     public static final double PIXEL_HOLD_POSITION = 1.0;
     private static final double CLIMBER_HOLD_POSITION = 1;
-    private static final double CLIMBER_RELEASE_POSITION =0.3;
+    private static final double CLIMBER_RELEASE_POSITION = 0.3;
 
     private static final double LAUNCH_HOLD_POSITION = 0.555;
     private static final double LAUNCH_RELEASE_POSITION = 0;
@@ -98,7 +100,7 @@ public class CompDrive extends OpMode {
 
         setUIColor(Color.GRAY);
 
-
+        stablizationTime.reset();
 
 
     }
@@ -193,6 +195,8 @@ public class CompDrive extends OpMode {
 
         pollPixelInputs();
 
+        pollPixelSensors();
+
 
        // telemetry.addData("climb pos ", RobotComponents.climb_motor.getCurrentPosition());
 
@@ -239,6 +243,32 @@ public class CompDrive extends OpMode {
             } else {
                 RobotComponents.right_pixel_hold_servo.setPosition(PIXEL_RELEASE_POSITION);
             }
+        }
+    }
+
+    ElapsedTime stablizationTime = new ElapsedTime();
+
+    // WOOT WOOT SENSORS HERE
+    public void pollPixelSensors() {
+
+        double leftDistance = RobotComponents.left_pixel_color_sensor.getDistance(DistanceUnit.CM);
+        double rightDistance = RobotComponents.right_pixel_color_sensor.getDistance(DistanceUnit.CM);
+        telemetry.addData("LeftDist: ", leftDistance);
+        telemetry.addData("RightDist: ", rightDistance);
+        if (leftDistance < 2.4 && stablizationTime.milliseconds() > 1000) {
+            RobotComponents.coroutines.runLater(
+                    () -> RobotComponents.right_pixel_hold_servo.setPosition(PIXEL_HOLD_POSITION),
+                    350
+            );
+
+        }
+
+        if (rightDistance < 5.2 && stablizationTime.milliseconds() > 1000) {
+            RobotComponents.coroutines.runLater(
+                    () -> RobotComponents.left_pixel_hold_servo.setPosition(PIXEL_HOLD_POSITION),
+                    350
+            );
+
         }
     }
 
