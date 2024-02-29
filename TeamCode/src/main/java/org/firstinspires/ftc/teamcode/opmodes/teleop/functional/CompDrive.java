@@ -31,6 +31,7 @@ import org.firstinspires.ftc.teamcode.macros.arm.up.ArmToDumpPointMacro;
 import org.firstinspires.ftc.teamcode.macros.arm.up.TuckWristForRiseMacro;
 import org.firstinspires.ftc.teamcode.macros.generic.RunActionMacro;
 import org.firstinspires.ftc.teamcode.macros.tuckdown.ArbitraryDelayMacro;
+import org.firstinspires.ftc.teamcode.sensing.BucketDistanceSensingArray;
 
 import java.util.function.Supplier;
 
@@ -102,8 +103,11 @@ public class CompDrive extends OpMode {
 
         stablizationTime.reset();
 
-
+        numPixelOffAlerts = 0;
+        RobotComponents.coroutines.startRoutine(pixelAutoOffAlert);
     }
+
+    BucketDistanceSensingArray bucketSensors;
 
     @Override
     public void init() {
@@ -121,6 +125,11 @@ public class CompDrive extends OpMode {
         input = new Input();
 
         RobotComponents.init(hardwareMap);
+
+        bucketSensors =
+                new BucketDistanceSensingArray(RobotComponents.left_pixel_color_sensor,
+                        RobotComponents.right_pixel_color_sensor);
+
         RobotComponents.tower_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         //RobotComponents.climb_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
@@ -216,28 +225,47 @@ public class CompDrive extends OpMode {
         //    outake_Servo.setPosition(extened_pos);
         //} else {
         //    outake_Servo.setPosition(closed_pos);
+    }
+
+
+
+
+    boolean pixelAutomationEnabled = true;
+    int numPixelOffAlerts = 0;
+
+    // runs forever on start
+    CoroutineAction pixelAutoOffAlert = (mode, data) -> {
+        if (!pixelAutomationEnabled && !gamepad1.isRumbling()
+            && (int)(data.MsAlive / 800) > numPixelOffAlerts) {
+            gamepad1.rumble(100);
+            numPixelOffAlerts++;
         }
-
-
+        return CoroutineResult.Continue;
+    };
 
     public void pollPixelInputs() {
+
+        if (input.start.down()) {
+            pixelAutomationEnabled = !pixelAutomationEnabled;
+        }
 
         if (input.a.down()) {
             RobotComponents.left_pixel_hold_servo.setPosition(PIXEL_HOLD_POSITION);
             RobotComponents.right_pixel_hold_servo.setPosition( PIXEL_HOLD_POSITION);
         }
-        else if (input.b.down()) {
+        if (input.b.down()) {
                 RobotComponents.left_pixel_hold_servo.setPosition(PIXEL_RELEASE_POSITION);
                 RobotComponents.right_pixel_hold_servo.setPosition(PIXEL_RELEASE_POSITION);
         }
 
-        else if (input.x.down()) {
+        if (input.x.down()) {
             if (RobotComponents.left_pixel_hold_servo.getPosition() == PIXEL_RELEASE_POSITION) {
                 RobotComponents.left_pixel_hold_servo.setPosition(PIXEL_HOLD_POSITION);
             } else {
                 RobotComponents.left_pixel_hold_servo.setPosition(PIXEL_RELEASE_POSITION);
             }
-        } else if (input.y.down()) {
+        }
+        if (input.y.down()) {
             if (RobotComponents.right_pixel_hold_servo.getPosition() == PIXEL_RELEASE_POSITION) {
                 RobotComponents.right_pixel_hold_servo.setPosition(PIXEL_HOLD_POSITION);
             } else {
@@ -248,29 +276,65 @@ public class CompDrive extends OpMode {
 
     ElapsedTime stablizationTime = new ElapsedTime();
 
+    boolean canPixelsOverrideIntake = true;
+
+    boolean lockedBecauseInLeft = false;
+    boolean lockedBecauseInRight = false;
+
+    void resetPixelHolderStateVariables() {
+        canPixelsOverrideIntake = true;
+        lockedBecauseInLeft = false;
+        lockedBecauseInRight = false;
+    }
+
     // WOOT WOOT SENSORS HERE
     public void pollPixelSensors() {
 
-        double leftDistance = RobotComponents.left_pixel_color_sensor.getDistance(DistanceUnit.CM);
-        double rightDistance = RobotComponents.right_pixel_color_sensor.getDistance(DistanceUnit.CM);
+
+
+        if (RobotComponents.tower_motor.getCurrentPosition() < -200) {
+            // next time it goes down allow intake to be stopped by pixels
+            resetPixelHolderStateVariables();
+            return;
+        }
+
+        if (!pixelAutomationEnabled) return;
+
+        double leftDistance = bucketSensors.leftCentimeters();
+        double rightDistance = bucketSensors.rightCentimeters();
         telemetry.addData("LeftDist: ", leftDistance);
         telemetry.addData("RightDist: ", rightDistance);
-        if (leftDistance < 2.4 && stablizationTime.milliseconds() > 1000) {
+        if (bucketSensors.isLeftPixelIn() && stablizationTime.milliseconds() > 1000) {
             RobotComponents.coroutines.runLater(
-                    () -> RobotComponents.right_pixel_hold_servo.setPosition(PIXEL_HOLD_POSITION),
-                    350
+                    () -> {
+                        lockedBecauseInLeft = true;
+                        // yes these are correctly swapped I
+                        RobotComponents.right_pixel_hold_servo.setPosition(PIXEL_HOLD_POSITION);
+                    },
+                    650
             );
 
         }
 
-        if (rightDistance < 5.2 && stablizationTime.milliseconds() > 1000) {
+        if (bucketSensors.isRightPixelIn() && stablizationTime.milliseconds() > 1000) {
             RobotComponents.coroutines.runLater(
-                    () -> RobotComponents.left_pixel_hold_servo.setPosition(PIXEL_HOLD_POSITION),
-                    350
+                    () -> {
+                        lockedBecauseInRight = true;
+                        // yes these are correctly swapped II
+                        RobotComponents.left_pixel_hold_servo.setPosition(PIXEL_HOLD_POSITION);
+                    },
+                    650
             );
 
+        }
+
+        if (canPixelsOverrideIntake && lockedBecauseInLeft && lockedBecauseInRight) {
+            needsToLetGoBeforeControlReturnsForIntake = true;
+            canPixelsOverrideIntake = false;
         }
     }
+
+
 
     boolean initializedClimb = false;
 
@@ -442,20 +506,34 @@ public class CompDrive extends OpMode {
 
     double speedMult = 1f;
 
+    boolean needsToLetGoBeforeControlReturnsForIntake = false;
+
     public void pollIntakeInputs() {
         int newDir = -999;
-        if (input.left_bumper.held()) {
-            newDir = intakeIn;
-        } else if (input.right_bumper.held()) {
-            newDir = intakeOut;
+
+        if (!needsToLetGoBeforeControlReturnsForIntake) {
+            if (input.left_bumper.held()) {
+                newDir = intakeIn;
+            } else if (input.right_bumper.held()) {
+                newDir = intakeOut;
+            } else {
+                newDir = direction;
+            }
         } else {
-            newDir = direction;
+            if (!input.left_bumper.held() && !input.right_bumper.held()) {
+                needsToLetGoBeforeControlReturnsForIntake = false;
+            }
         }
 
         //if (input.x.down()) speedMult -= 0.02;
         //if (input.y.down()) speedMult += 0.02;
 
         speedMult = RMath.clamp(speedMult, 0, 1);
+
+        if (newDir == -999) {
+            RobotComponents.front_intake_motor.setPower(0);
+            return;
+        }
 
         // if you hit same button that's already on, it turns off - unless it is running for tower
         if (!MacroSequence.isRunning()) {

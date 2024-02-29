@@ -71,9 +71,8 @@ public class BucketDistanceTuner extends OpMode {
             telemetry.addLine("1) Ensure no unrealistic shadows/lighting will affect tuning.");
             telemetry.addLine("2) REMOVE any pixels already in the bucket, turn holders out of the way.");
             telemetry.addLine("3) Place bucket in the intake position, as if stowed for a game.");
-
-
             telemetry.addLine();
+            telemetry.addLine("Press 'A' when it is positioned.");
             return;
         }
 
@@ -92,10 +91,10 @@ public class BucketDistanceTuner extends OpMode {
         WaitForExit
     }
 
-    private TunePhase currentTunePhase = TunePhase.Start;
+    private TunePhase currentTunePhase = null;
 
-    List<Double> leftValuesOverTime = new ArrayList<>(100);
-    List<Double> rightValuesOverTime = new ArrayList<>(100);
+    List<Double> leftValuesOverTime = new ArrayList<>(140);
+    List<Double> rightValuesOverTime = new ArrayList<>(140);
 
 
 
@@ -137,12 +136,9 @@ public class BucketDistanceTuner extends OpMode {
                 break;
 
             case WaitForExit:
-                if (showYPromptOnce) {
-                    showYPromptOnce = false;
-                    telemetry.addLine("'B' to exit.");
-                }
 
-                if (input.y.down()) {
+
+                if (input.b.down()) {
                     telemetry.clear();
                     currentTunePhase = null;
                     menuScreen();
@@ -165,9 +161,7 @@ public class BucketDistanceTuner extends OpMode {
             isFirstTickStartRoutine = false;
             coroutines.runLater(() -> {
                 continuePastStartReady = true;
-
-                telemetry.addLine("Press 'A' when it is properly positioned.");
-            }, 700);
+                }, 700);
         }
 
         if (input.a.down() && continuePastStartReady) {
@@ -188,7 +182,7 @@ public class BucketDistanceTuner extends OpMode {
 
     CoroutineAction idleTune = (opmode, data) -> {
 
-        if (timeInPhase.milliseconds() > 6250) {
+        if (timeInPhase.milliseconds() > 10250) {
             calculateAvgIdleReady = true;
             return CoroutineResult.Stop;
         }
@@ -199,7 +193,7 @@ public class BucketDistanceTuner extends OpMode {
             rightValuesOverTime.add(bucketSensors.rightCentimeters());
         }
 
-        if (timeInPhase.milliseconds() > 3500 && !idleAlmostThere) {
+        if (timeInPhase.milliseconds() > 6500 && !idleAlmostThere) {
             idleAlmostThere = true;
             telemetry.addLine("Almost there...");
         }
@@ -226,6 +220,7 @@ public class BucketDistanceTuner extends OpMode {
             telemetry.addLine("Alright. We've established a baseline.");
             telemetry.addLine("Please fully insert two pixels of any color, one in each slot, into the bucket.");
             telemetry.addLine();
+            telemetry.addLine("Press 'A' when they are fully inserted.");
             currentTunePhase = TunePhase.Load;
 
             telemetry.speak("done");
@@ -275,13 +270,12 @@ public class BucketDistanceTuner extends OpMode {
             firstTickLoadRoutine = false;
             coroutines.runLater(() -> {
                 loadStartReady = true;
-
-                telemetry.addLine("Press 'A' when they are fully inserted.");
             }, 700);
         }
 
         if (input.a.down() && loadStartReady) {
             loadStartReady = false;
+            telemetry.addLine("Perfect! Just a moment as we scan once more...");
 
             timeInPhase.reset();
             coroutines.startRoutine(loadPollAction);
@@ -318,9 +312,10 @@ public class BucketDistanceTuner extends OpMode {
             telemetry.clear();
             timeInPhase.reset();
 
-            telemetry.addLine("Please swap each pixel to a color it has not been before.");
+            telemetry.addLine("Please swap each pixel to a color it has not been before, then press 'A'. Screen may not update until the 'Almost there...'");
             telemetry.addLine();
             currentTunePhase = TunePhase.Load;
+            firstTickLoadRoutine = true;
         }
 
         if (input.y.down() && redoLoadReady) {
@@ -331,6 +326,7 @@ public class BucketDistanceTuner extends OpMode {
             timeInPhase.reset();
 
             currentTunePhase = TunePhase.End;
+            firstTickLoadRoutine = true;
         }
     }
 
@@ -358,9 +354,11 @@ public class BucketDistanceTuner extends OpMode {
                 df.format(averagePixelLeft) + " / " + df.format(averagePixelRight));
 
 
+        telemetry.addLine("'B' to exit.");
+
          BucketDistanceSensingArray.tune(
-                 averagePixelLeft + (gapBetweenLeftValues * 0.4),
-                 averagePixelRight + (gapBetweenRightValues * 0.4)
+                 averagePixelLeft + (gapBetweenLeftValues * 0.45),
+                 averagePixelRight + (gapBetweenRightValues * 0.45)
          );
 
          currentTunePhase = TunePhase.WaitForExit;

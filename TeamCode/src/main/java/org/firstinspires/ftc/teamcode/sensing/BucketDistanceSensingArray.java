@@ -8,8 +8,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 @Config
 public class BucketDistanceSensingArray {
 
-    private static double LeftThreshold = 5;
-    private static double RightThreshold = 5;
+    private static double LeftThreshold = 4.45;
+    private static double RightThreshold = 5.81;
     private RevColorSensorV3 leftSensor, rightSensor;
 
     public BucketDistanceSensingArray(RevColorSensorV3 left, RevColorSensorV3 right) {
