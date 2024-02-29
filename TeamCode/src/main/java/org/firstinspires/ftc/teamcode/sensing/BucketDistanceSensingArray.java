@@ -40,6 +40,17 @@ public class BucketDistanceSensingArray {
         return rightSensor;
     }
 
+    public static void tune(double leftThreshold, double rightThreshold) {
+        LeftThreshold = leftThreshold;
+        RightThreshold = rightThreshold;
+    }
 
+    public static double leftThreshold() {
+        return LeftThreshold;
+    }
+
+    public static double rightThreshold() {
+        return RightThreshold;
+    }
 
 }
