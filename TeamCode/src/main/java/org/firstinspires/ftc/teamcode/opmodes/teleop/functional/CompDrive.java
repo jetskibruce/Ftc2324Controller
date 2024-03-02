@@ -55,8 +55,8 @@ public class CompDrive extends OpMode {
 
     public static final double PIXEL_RELEASE_POSITION = 0.5;
     public static final double PIXEL_HOLD_POSITION = 1.0;
-    private static final double CLIMBER_HOLD_POSITION = 1;
-    private static final double CLIMBER_RELEASE_POSITION = 0.3;
+    private static final double CLIMBER_HOLD_POSITION = .85;
+    private static final double CLIMBER_RELEASE_POSITION = .5;
 
     private static final double LAUNCH_HOLD_POSITION = 0.555;
     private static final double LAUNCH_RELEASE_POSITION = 0;
@@ -350,9 +350,12 @@ public class CompDrive extends OpMode {
         }
 
 
-        if (gamepad1.dpad_up) {
-            RobotComponents.climb_motor.setPower(1);
+        if (gamepad1.back && input.y.down()) {
+
             RobotComponents.climber_clasp_servo.setPosition(CLIMBER_RELEASE_POSITION);
+
+
+
 
             if (!initializedClimb) {
                 try {
@@ -365,6 +368,10 @@ public class CompDrive extends OpMode {
             initializedClimb = true;
 
         }
+        else if (gamepad1.dpad_up){
+            RobotComponents.climb_motor.setPower(1);
+        }
+
         else if (gamepad1.dpad_down) {
             RobotComponents.climb_motor.setPower(-1);
         }

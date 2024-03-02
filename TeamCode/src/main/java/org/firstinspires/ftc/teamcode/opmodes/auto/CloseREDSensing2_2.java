@@ -5,6 +5,7 @@ import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.REVERSE;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -51,7 +52,7 @@ import static org.firstinspires.ftc.teamcode.components.RobotConstants.*;
 
 
 
-
+@Disabled
 
 @Autonomous(name="RedEndzone Shortside SENSING 2+2Auto", group="aCompete")
 public class CloseREDSensing2_2 extends LinearOpMode {

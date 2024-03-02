@@ -6,6 +6,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.MarkerCallback;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -22,7 +23,7 @@ import static org.firstinspires.ftc.teamcode.components.RobotComponents.*;
 import static org.firstinspires.ftc.teamcode.components.RobotConstants.*;
 
 import java.util.function.Supplier;
-
+@Disabled
 @Autonomous(name="RedEndzone Shortside SENSING Extended Auto", group="aCompete")
 public class CloseRedSENSINGExtended extends LinearOpMode {
 
